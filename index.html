@@ -187,7 +187,29 @@ service cloud.firestore {
    <p style="text-align:center;font-size:12px;color:var(--mu);">이미 연결한 경우 자동으로 연결됩니다</p>
    <div style="height:30px;"></div>
   </div>
-
+  <!-- 주문필터 UI 추가 -->
+  <div style="margin-bottom:15px;display:flex;flex-direction:column;gap:8px;">
+  
+  <div style="display:flex;gap:8px;">
+  <input type="date" id="start-date" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;">
+  <input type="date" id="end-date" style="flex:1;padding:8px;border:1px solid #ddd;border-radius:8px;">
+  </div>
+  
+  <input 
+   type="text" 
+   id="search-name" 
+   placeholder="주문자 이름 검색" 
+   style="padding:8px;border:1px solid #ddd;border-radius:8px;"
+  >
+  
+  <div style="display:flex;gap:8px;">
+  <button onclick="filterOrders()" class="btn-sm">조회</button>
+  <button onclick="todayOrders()" class="btn-sm">오늘</button>
+  <button onclick="clearFilter()" class="btn-sm">전체</button>
+  </div>
+  <div id="total-sales" style="font-weight:bold;color:#333"></div>
+  </div>
+   
   <!-- ════════ SPLASH ════════ -->
   <div id="p-splash" class="pg-full" style="background:linear-gradient(150deg,#FFF3E0,#FDE8EF);padding:40px 24px;">
    <div id="splash-logo"></div>
@@ -453,7 +475,7 @@ function init(){
   }
 }
 ───────────────────────────────────────────── */
-  
+
 function init(){
   renderLogos();
 
@@ -482,6 +504,69 @@ function init(){
   }
 }
 
+
+/* ─────────────────────────────────────────────
+  날짜조회 필터 기능
+───────────────────────────────────────────── */
+function todayOrders(){
+
+var today=new Date().toISOString().substring(0,10);
+document.getElementById('start-date').value=today;
+document.getElementById('end-date').value=today;
+filterOrders();
+
+}
+
+function clearFilter(){
+document.getElementById('start-date').value='';
+document.getElementById('end-date').value='';
+document.getElementById('search-name').value='';
+filterOrders();
+
+}
+
+function filterOrders(){
+var start=document.getElementById('start-date').value;
+var end=document.getElementById('end-date').value;
+var name=document.getElementById('search-name').value;
+var total=0;
+var list=S.orders.filter(function(o){
+if(start && o.createdAt < start) return false;
+if(end && o.createdAt > end+' 23:59') return false;
+if(name && !o.userName.includes(name)) return false;
+return true;
+
+});
+
+renderFilteredOrders(list);
+list.forEach(function(o){
+ total+=o.total;
+});
+
+document.getElementById('total-sales').innerHTML=
+"총 매출 : "+total.toLocaleString()+"원 ("+list.length+"건)";
+}
+  
+/* ─────────────────────────────────────────────
+   주문 렌더링 함수
+───────────────────────────────────────────── */
+
+function renderFilteredOrders(list){
+var html='';
+list.reverse().forEach(function(o){
+html+=`
+
+<div class="order-item">
+<div>주문자 : ${o.userName}</div>
+<div>주문일 : ${o.createdAt}</div>
+<div>금액 : ${o.total.toLocaleString()}원</div>
+</div>
+`;
+});
+
+document.getElementById('orders-list').innerHTML=html;
+
+}
   
 /* ─────────────────────────────────────────────
    Firebase 수동 연결
@@ -743,6 +828,83 @@ function deliveryTrackHtml(o){
   });
   return html+'</div></div>';
 }
+
+/* ─────────────────────────────────────────────
+   renderBuyerOrders
+───────────────────────────────────────────── */
+function renderBuyerOrders(){
+
+var start=document.getElementById('start-date')?.value;
+var end=document.getElementById('end-date')?.value;
+var name=document.getElementById('search-name')?.value;
+var total=0;
+var list=S.orders.filter(function(o){
+if(o.userId!==S.user.id) return false;
+if(start && o.createdAt < start) return false;
+if(end && o.createdAt > end+' 23:59') return false;
+if(name && !o.userName.includes(name)) return false;
+return true;
+
+});
+
+var html='';
+list.reverse().forEach(function(o){
+html+=`
+<div class="order-item">
+<div>주문자 : ${o.userName}</div>
+<div>주문일 : ${o.createdAt}</div>
+<div>금액 : ${o.total.toLocaleString()}원</div>
+<div>상태 : ${o.status}</div>
+</div>
+`;
+total+=o.total;
+
+});
+
+document.getElementById('orders-list').innerHTML=html;
+if(document.getElementById('total-sales')){
+document.getElementById('total-sales').innerHTML=
+"총 주문금액 : "+total.toLocaleString()+"원";
+}
+}
+
+/* ─────────────────────────────────────────────
+   renderAdminOrders
+───────────────────────────────────────────── */
+function renderAdminOrders(){
+var start=document.getElementById('start-date')?.value;
+var end=document.getElementById('end-date')?.value;
+var name=document.getElementById('search-name')?.value;
+var total=0;
+var list=S.orders.filter(function(o){
+if(start && o.createdAt < start) return false;
+if(end && o.createdAt > end+' 23:59') return false;
+if(name && !o.userName.includes(name)) return false;
+return true;
+});
+
+var html='';
+list.reverse().forEach(function(o){
+html+=`
+<div class="order-item">
+<div>주문자 : ${o.userName}</div>
+<div>전화번호 : ${o.userPhone}</div>
+<div>주문일 : ${o.createdAt}</div>
+<div>금액 : ${o.total.toLocaleString()}원</div>
+<div>상태 : ${o.status}</div>
+</div>
+`;
+total+=o.total;
+
+});
+
+document.getElementById('admin-orders-list').innerHTML=html;
+if(document.getElementById('total-sales')){
+document.getElementById('total-sales').innerHTML=
+"총 매출 : "+total.toLocaleString()+"원 ("+list.length+"건)";
+}
+}
+
 
 /* ─────────────────────────────────────────────
    주문자 주문 내역
