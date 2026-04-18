@@ -423,24 +423,30 @@ function init(){
     nav('setup');
     return;
   }
-  var stored = localStorage.getItem('fbConfig');
-  if(stored){
-    try{
-      initFB(JSON.parse(stored));
-      DB.load().then(function(){
-        nav('splash');
-        setTimeout(function(){ nav('login'); }, 1800);
-      }).catch(function(e){
-        localStorage.removeItem('fbConfig');
-        nav('setup');
-        showToast('DB 로드 실패. Firebase 보안 규칙을 확인해주세요.','warn');
-      });
-    }catch(e){
-      localStorage.removeItem('fbConfig');
-      nav('setup');
-    }
-  } else {
-    nav('setup');
+  
+  // 전달해주신 Firebase 설정값 하드코딩
+  var fbConfig = {
+    apiKey: "AIzaSyCdJF7gnUWcBqmpUSgBFhhUTDrO6b2goSo",
+    authDomain: "breadshop-74ae6.firebaseapp.com",
+    projectId: "breadshop-74ae6",
+    storageBucket: "breadshop-74ae6.firebasestorage.app",
+    messagingSenderId: "133816851316",
+    appId: "1:133816851316:web:31e0a53d9fa78ab817ea21",
+    measurementId: "G-KMSS6H7TV0"
+  };
+
+  try{
+    initFB(fbConfig); // 하드코딩된 설정으로 즉시 초기화
+    DB.load().then(function(){
+      nav('splash'); // 스플래시 화면 재생
+      setTimeout(function(){ nav('login'); }, 1800); // 1.8초 뒤 로그인 화면으로 이동
+    }).catch(function(e){
+      console.error(e);
+      showToast('DB 로드에 실패했습니다. (보안 규칙 등을 확인해주세요)', 'error');
+    });
+  }catch(e){
+    console.error(e);
+    showToast('Firebase 초기화 오류가 발생했습니다.', 'error');
   }
 }
 
