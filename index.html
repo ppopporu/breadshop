@@ -11,7 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
 <style>
-/* --- CSS 스타일 (전체 유지) --- */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#FFF8F0;}
 :root{
@@ -116,6 +115,7 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
 .sdesc a{color:var(--p);font-weight:600;text-decoration:none;}
 .code-box{background:#F5F0EB;border-radius:8px;padding:10px 12px;margin-top:8px;font-family:'Courier New',monospace;font-size:11px;color:var(--sb);border:1px solid var(--bd);white-space:pre;overflow-x:auto;line-height:1.6;}
 .fb-badge{display:inline-block;background:#FF6D00;color:#fff;border-radius:8px;padding:3px 10px;font-size:11px;font-weight:700;margin-bottom:8px;}
+.sdk-warn{background:#FFF3E0;border:1px solid rgba(232,160,32,.4);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none;}
 #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);border-radius:30px;padding:10px 24px;font-family:var(--f);font-weight:700;font-size:13px;z-index:9999;white-space:nowrap;display:none;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,.18);}
 #modal{position:fixed;top:0;left:0;right:0;bottom:0;z-index:500;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;}
 #mbox{background:var(--cd);border-radius:24px 24px 0 0;padding:28px 22px;width:100%;max-width:430px;}
@@ -149,8 +149,8 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
     <p class="sub-txt">안산시 단원구 선부동의 작은 빵집</p>
    </div>
    <div class="card" style="padding:26px 22px;">
-    <div class="fld"><label>이메일 / 전화번호</label><input id="li-id" type="text" placeholder="이메일 또는 admin"></div>
-    <div class="fld"><label>비밀번호</label><input id="li-pw" type="password" placeholder="비밀번호 입력"></div>
+    <div class="fld"><label>이메일 / 아이디</label><input id="li-id" type="text" placeholder="이메일 또는 admin" autocomplete="username"></div>
+    <div class="fld"><label>비밀번호</label><input id="li-pw" type="password" placeholder="비밀번호 입력" autocomplete="current-password"></div>
     <p id="li-err" class="err" style="display:none;"></p>
     <button onclick="doLogin()" class="btn-p" style="margin-bottom:10px;">로그인</button>
     <button onclick="nav('register')" class="btn-s">회원가입</button>
@@ -203,8 +203,8 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
    </div>
    <div class="card">
     <p class="sec-title">🗺️ 지도에서 찾기</p>
-    <a href="https://map.kakao.com/link/search/안산시 단원구 선부동 옷장속의 작은 빵집" target="_blank" class="map-a" style="background:#FEE500;color:#3C1E1E;">🟡 카카오맵으로 보기 →</a>
-    <a href="https://map.naver.com/v5/search/경기도 안산시 단원구 선부동 옷장속의작은빵집" target="_blank" class="map-a" style="background:#03C75A;color:#fff;">🟢 네이버맵으로 보기 →</a>
+    <a href="https://map.kakao.com/link/search/안산시 단원구 선부동 옷장속의 작은 빵집" target="_blank" rel="noopener" class="map-a" style="background:#FEE500;color:#3C1E1E;"><span style="font-size:18px;">🟡</span><span>카카오맵으로 보기</span><span style="margin-left:auto;">→</span></a>
+    <a href="https://map.naver.com/v5/search/경기도 안산시 단원구 선부동 옷장속의작은빵집" target="_blank" rel="noopener" class="map-a" style="background:#03C75A;color:#fff;"><span style="font-size:18px;">🟢</span><span>네이버맵으로 보기</span><span style="margin-left:auto;">→</span></a>
    </div>
    <div class="card"><p class="sec-title">💳 계좌 정보</p><div id="info-bank" style="background:var(--bg);border-radius:14px;padding:14px 16px;"></div></div>
   </div>
@@ -229,7 +229,9 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
      <div class="photo-upload-area" onclick="triggerFileInput()">
       <input type="file" id="np-photo-file" accept="image/*" onchange="handlePhotoSelect(event)">
       <div class="photo-placeholder" id="upload-placeholder">
-       <span style="font-size:32px;">📷</span><span style="font-size:13px;font-weight:700;color:var(--p);">클릭하여 사진 첨부</span>
+       <span style="font-size:32px;">📷</span>
+       <span style="font-size:13px;font-weight:700;color:var(--p);">클릭하여 사진 첨부</span>
+       <span style="font-size:11px;color:var(--mu);">JPG, PNG, WEBP · 최대 4MB</span>
       </div>
       <img id="np-preview" alt="미리보기">
       <button class="photo-change-btn" id="photo-change-btn" style="display:none;" onclick="clearPhoto(event)">✕ 사진 제거</button>
@@ -274,7 +276,7 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
   <div id="mbox" onclick="event.stopPropagation()">
    <h3 style="font-size:18px;font-weight:800;color:var(--pd);margin-bottom:6px;">주문 취소</h3>
    <p style="font-size:14px;color:var(--mu);margin-bottom:16px;">취소 사유를 입력해주세요. 고객에게 전달됩니다.</p>
-   <div class="fld"><textarea id="cancel-reason" placeholder="예: 재료 부족으로 생산이 불가능합니다." style="min-height:100px;"></textarea></div>
+   <div class="fld"><textarea id="cancel-reason" placeholder="예: 재료 부족으로 해당 상품 생산이 불가능합니다." style="min-height:100px;"></textarea></div>
    <div style="display:flex;gap:10px;">
     <button onclick="closeModal()" style="flex:1;background:#F0F0F0;color:var(--sb);border:none;border-radius:14px;padding:13px 0;font-weight:700;font-family:var(--f);cursor:pointer;">닫기</button>
     <button onclick="confirmCancel()" style="flex:1;background:var(--re);color:#ffffff;border:none;border-radius:14px;padding:13px 0;font-weight:700;font-family:var(--f);cursor:pointer;">취소 확인</button>
@@ -283,9 +285,12 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
  </div>
 </div><script>
 /* ─────────────────────────────────────────────
-   Firebase 로직 및 전체 기능
+   Firebase 초기화 함수 (수정됨)
 ───────────────────────────────────────────── */
 function initFB(cfg) {
+  if (typeof firebase === 'undefined' || typeof firebase.firestore === 'undefined') {
+      throw new Error('Firebase SDK가 로드되지 않았습니다.');
+  }
   if (!firebase.apps.length) firebase.initializeApp(cfg);
   var db = firebase.firestore();
   window.FB = {
@@ -297,44 +302,51 @@ function initFB(cfg) {
   };
 }
 
+/* ─────────────────────────────────────────────
+   앱 상태
+───────────────────────────────────────────── */
 var LOCS = ['부곡이웃교회', '꼬르륵'];
 var S = {
   view:'splash', user:null,
   products:[], orders:[], users:[],
   adminPw:'admin',
   bankInfo:{bank:'농협은행', account:'301-0256-7890-11', holder:'빵집주인'},
-  cart:{}, delivery:'부곡이웃교회', cancelTarget:null, pendingPhoto:null
+  cart:{}, delivery:'부곡이웃교회',
+  cancelTarget:null, pendingPhoto:null
 };
 
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+/* ─────────────────────────────────────────────
+   DB Layer
+───────────────────────────────────────────── */
 var DB = {
   load: async function(){
     var r = await Promise.all([FB.getAll('products'), FB.getAll('orders'), FB.getAll('users'), FB.getDoc('config','main')]);
-    S.products=r[0]||[]; S.orders=r[1]||[]; S.users=r[2]||[];
+    S.products=r[0]; S.orders=r[1]; S.users=r[2];
     if(r[3]){ S.adminPw=r[3].adminPw||'admin'; S.bankInfo=r[3].bankInfo||S.bankInfo; }
   },
-  addProduct: async function(p){ await FB.setDoc('products',p.id,p); S.products.push(p); },
+  addProduct: async function(p){ await FB.setDoc('products',p.id,p); S.products=S.products.concat([p]); },
   delProduct: async function(id){ await FB.del('products',id); S.products=S.products.filter(function(p){return p.id!==id;}); },
-  addUser: async function(u){ await FB.setDoc('users',u.id,u); S.users.push(u); },
-  addOrder: async function(o){ await FB.setDoc('orders',o.id,o); S.orders.push(o); },
-  updOrder: async function(id,d){ await FB.upd('orders',id,d); S.orders=S.orders.map(function(o){return o.id===id?Object.assign(o,d):o;}); },
+  addUser:    async function(u){ await FB.setDoc('users',u.id,u); S.users=S.users.concat([u]); },
+  addOrder:   async function(o){ await FB.setDoc('orders',o.id,o); S.orders=S.orders.concat([o]); },
+  updOrder:   async function(id,data){ await FB.upd('orders',id,data); S.orders=S.orders.map(function(o){return o.id===id?Object.assign({},o,data):o;}); },
   saveConfig: async function(){ return FB.setDoc('config','main',{adminPw:S.adminPw, bankInfo:S.bankInfo}); }
 };
 
 /* ─────────────────────────────────────────────
-   앱 시작 초기화 (수정된 핵심 부분)
+   ★ 앱 시작 로직 (수정됨: 하드코딩 적용 & 설정화면 무시)
 ───────────────────────────────────────────── */
 function init(){
   renderLogos();
 
-  // Firebase 외부 스크립트가 로드될 때까지 0.1초 대기
+  // Firebase SDK 로드 대기 (인터넷 지연 대비)
   if (typeof firebase === 'undefined' || typeof firebase.firestore === 'undefined') {
-    setTimeout(init, 100); 
-    return; 
+    setTimeout(init, 100);
+    return;
   }
 
-  // 전달해주신 고정된 Firebase 설정값
+  // 전달해주신 Firebase 설정 하드코딩
   var fbConfig = {
     apiKey: "AIzaSyCdJF7gnUWcBqmpUSgBFhhUTDrO6b2goSo",
     authDomain: "breadshop-74ae6.firebaseapp.com",
@@ -348,43 +360,67 @@ function init(){
   try {
     initFB(fbConfig);
     DB.load().then(function(){
-      // 정상적으로 데이터를 불러오면 1.5초 후 로그인 화면으로 이동
+      // 데이터 로드 성공: 1.5초 후 스플래시 -> 로그인 화면 이동
+      nav('splash');
       setTimeout(function(){ nav('login'); }, 1500);
     }).catch(function(e){
-      console.error("Firebase 데이터 읽기 에러:", e);
-      // 🔥 에러가 나더라도 무조건 화면이 넘어가도록(멈춤 방지) 처리
+      console.error("DB Load Error:", e);
+      // DB 권한 오류가 나더라도 무조건 로그인 화면으로 이동 (멈춤 방지)
+      nav('splash');
       setTimeout(function(){ 
-        nav('login'); 
-        alert("데이터베이스 권한 오류가 발생했습니다.\nFirebase 콘솔 - Firestore의 '규칙(Rules)' 탭에서\nallow read, write: if true; 로 설정되어 있는지 확인해주세요.");
+          nav('login'); 
+          alert("데이터베이스 접근 권한 오류가 발생했습니다.\nFirebase Firestore '규칙' 탭 설정을 확인해주세요.");
       }, 1500);
     });
   } catch(e) {
-    console.error("Firebase 연결 에러:", e);
-    // 연결 자체 실패 시에도 화면 넘어감
+    console.error("Firebase Init Error:", e);
+    // 예기치 못한 초기화 오류 발생 시에도 무조건 로그인 화면 이동
+    nav('splash');
     setTimeout(function(){ nav('login'); }, 1500);
   }
 }
 
 /* ─────────────────────────────────────────────
-   UI 공통 & 네비게이션
+   로고 SVG
 ───────────────────────────────────────────── */
-function makeLogo(sz){ return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#FDE8EF" stroke="#F4A0B5" stroke-width="1.5"/><circle cx="50" cy="50" r="44" fill="#FFF5EC"/><rect x="21" y="19" width="58" height="49" rx="5" fill="#9E5C3A"/><rect x="21" y="19" width="58" height="9" rx="5" fill="#7A4A2C"/><rect x="23" y="28" width="26" height="37" rx="3" fill="#C8855C" stroke="#7A4A2C" stroke-width="1"/><rect x="51" y="28" width="26" height="37" rx="3" fill="#C8855C" stroke="#7A4A2C" stroke-width="1"/><circle cx="46" cy="47" r="2.5" fill="#F4A0B5"/><circle cx="54" cy="47" r="2.5" fill="#F4A0B5"/><ellipse cx="50" cy="67" rx="21" ry="11" fill="#F5C98A"/><ellipse cx="50" cy="64" rx="18" ry="9" fill="#F9DFA8"/><ellipse cx="50" cy="62" rx="15" ry="7" fill="#FBECC8"/><ellipse cx="43" cy="62" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(-15 43 62)"/><ellipse cx="50" cy="60" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(5 50 60)"/><ellipse cx="57" cy="62" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(15 57 62)"/><path d="M36 56 Q37 52 36 48" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M50 54 Q51 50 50 46" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M64 56 Q65 52 64 48" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>'; }
-
+function makeLogo(sz){
+  sz=sz||70;
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'
+   +'<circle cx="50" cy="50" r="48" fill="#FDE8EF" stroke="#F4A0B5" stroke-width="1.5"/>'
+   +'<circle cx="50" cy="50" r="44" fill="#FFF5EC"/>'
+   +'<rect x="21" y="19" width="58" height="49" rx="5" fill="#9E5C3A"/>'
+   +'<rect x="21" y="19" width="58" height="9" rx="5" fill="#7A4A2C"/>'
+   +'<rect x="23" y="28" width="26" height="37" rx="3" fill="#C8855C" stroke="#7A4A2C" stroke-width="1"/>'
+   +'<rect x="51" y="28" width="26" height="37" rx="3" fill="#C8855C" stroke="#7A4A2C" stroke-width="1"/>'
+   +'<circle cx="46" cy="47" r="2.5" fill="#F4A0B5"/><circle cx="54" cy="47" r="2.5" fill="#F4A0B5"/>'
+   +'<ellipse cx="50" cy="67" rx="21" ry="11" fill="#F5C98A"/>'
+   +'<ellipse cx="50" cy="64" rx="18" ry="9" fill="#F9DFA8"/>'
+   +'<ellipse cx="50" cy="62" rx="15" ry="7" fill="#FBECC8"/>'
+   +'<ellipse cx="43" cy="62" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(-15 43 62)"/>'
+   +'<ellipse cx="50" cy="60" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(5 50 60)"/>'
+   +'<ellipse cx="57" cy="62" rx="2.3" ry="1.4" fill="#C8855C" transform="rotate(15 57 62)"/>'
+   +'<path d="M36 56 Q37 52 36 48" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+   +'<path d="M50 54 Q51 50 50 46" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+   +'<path d="M64 56 Q65 52 64 48" stroke="#F4A0B5" stroke-width="1.5" stroke-linecap="round" fill="none"/>'
+   +'</svg>';
+}
 function renderLogos(){
-  ['splash-logo','login-logo','reg-logo','info-logo'].forEach(function(id){
-    var el=document.getElementById(id); if(el) el.innerHTML=makeLogo(70);
+  [['splash-logo',100],['login-logo',70],['reg-logo',64],['info-logo',64]].forEach(function(p){
+    var el=document.getElementById(p[0]); if(el) el.innerHTML=makeLogo(p[1]);
   });
 }
 
+/* ─────────────────────────────────────────────
+   화면 전환
+───────────────────────────────────────────── */
 function nav(view){
   S.view=view;
   document.querySelectorAll('.pg,.pg-full').forEach(function(p){ p.classList.remove('on'); });
-  var el=document.getElementById('p-'+view); if(el) el.classList.add('on');
+  var map={splash:'p-splash',login:'p-login',register:'p-register',shop:'p-shop',orders:'p-orders',info:'p-info','admin-orders':'p-admin-orders','admin-products':'p-admin-products','admin-settings':'p-admin-settings'};
+  var el=document.getElementById(map[view]); if(el) el.classList.add('on');
   var navEl=document.getElementById('nav'); var cartFt=document.getElementById('cart-ft');
-  
-  if(['splash','login','register'].indexOf(view)===-1 && S.user){ navEl.style.display='flex'; renderNav(); } 
-  else { navEl.style.display='none'; }
-  
+  var hideNav=['splash','login','register'];
+  if(S.user && hideNav.indexOf(view)===-1){ navEl.style.display='flex'; renderNav(); } else { navEl.style.display='none'; }
   if(view==='shop'){ renderShop(); renderCartFt(); } else { cartFt.style.display='none'; }
   if(view==='orders') renderBuyerOrders();
   if(view==='admin-orders') renderAdminOrders();
@@ -408,31 +444,23 @@ function renderNav(){
   }).join('');
 }
 
-var _tt;
-function showToast(msg,type){
-  var t=document.getElementById('toast');
-  t.style.background=type==='warn'?'#E8A020':type==='error'?'#D94444':'#4CAF82';
-  t.textContent=msg; t.style.display='block';
-  clearTimeout(_tt); _tt=setTimeout(function(){ t.style.display='none'; }, 3200);
-}
-
 /* ─────────────────────────────────────────────
-   로그인 & 회원가입 로직
+   인증
 ───────────────────────────────────────────── */
 function doLogin(){
   var id=document.getElementById('li-id').value.trim();
   var pw=document.getElementById('li-pw').value;
   var err=document.getElementById('li-err');
   if(!id||!pw){ err.textContent='아이디와 비밀번호를 입력해주세요.'; err.style.display='block'; return; }
-  
   if(id==='admin' && pw===S.adminPw){
     S.user={id:'admin',name:'관리자',role:'admin'}; err.style.display='none';
+    document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
     nav('admin-orders'); showToast('관리자로 로그인했습니다. 🍞'); return;
   }
-  
-  var u=S.users.find(function(u){ return (u.email===id || u.phone===id) && u.password===pw; });
+  var u=S.users.find(function(u){ return u.email===id && u.password===pw; });
   if(u){
     S.user=Object.assign({},u,{role:'buyer'}); err.style.display='none';
+    document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
     nav('shop'); showToast(u.name+'님, 환영합니다! 🍞'); return;
   }
   err.textContent='아이디 또는 비밀번호가 올바르지 않습니다.'; err.style.display='block';
@@ -445,12 +473,10 @@ async function doRegister(){
   var pw=document.getElementById('rg-pw').value;
   var pw2=document.getElementById('rg-pw2').value;
   var err=document.getElementById('rg-err');
-  
   if(!name||!phone||!email||!pw){ err.textContent='모든 항목을 입력해주세요.'; err.style.display='block'; return; }
   if(pw!==pw2){ err.textContent='비밀번호가 일치하지 않습니다.'; err.style.display='block'; return; }
   if(pw.length<4){ err.textContent='비밀번호는 4자 이상 입력해주세요.'; err.style.display='block'; return; }
   if(email==='admin' || S.users.find(function(u){ return u.email===email; })){ err.textContent='이미 사용 중인 이메일입니다.'; err.style.display='block'; return; }
-  
   try{
     await DB.addUser({id:Date.now().toString(),name:name,phone:phone,email:email,password:pw});
     err.style.display='none';
@@ -462,7 +488,7 @@ async function doRegister(){
 function doLogout(){ S.user=null; S.cart={}; nav('login'); }
 
 /* ─────────────────────────────────────────────
-   고객 상점 & 장바구니
+   상품 / 장바구니
 ───────────────────────────────────────────── */
 function renderShop(){
   var grid=document.getElementById('shop-grid');
@@ -471,13 +497,21 @@ function renderShop(){
     var q=S.cart[p.id]||0;
     var img=p.photo?'<img src="'+p.photo+'" onerror="this.style.display=\'none\'">':'';
     var em=p.photo?'':'<span class="pe">🍞</span>';
-    return '<div class="pc'+(q>0?' sel':'')+'" id="pc-'+p.id+'"><div class="pt">'+img+em+'</div><div class="pinfo"><div class="pn">'+esc(p.name)+'</div><div class="pp">'+p.price.toLocaleString()+'원</div><div class="qc"><button class="qb qm" onclick="setQty(\''+p.id+'\',-1)">−</button><span class="qv" id="qv-'+p.id+'">'+q+'</span><button class="qb qp" onclick="setQty(\''+p.id+'\',1)">+</button></div></div></div>';
+    return '<div class="pc'+(q>0?' sel':'')+'" id="pc-'+p.id+'">'
+      +'<div class="pt">'+img+em+'</div>'
+      +'<div class="pinfo"><div class="pn">'+esc(p.name)+'</div>'
+      +'<div class="pp">'+p.price.toLocaleString()+'원</div>'
+      +'<div class="qc">'
+      +'<button class="qb qm" onclick="setQty(\''+p.id+'\',-1)">−</button>'
+      +'<span class="qv" id="qv-'+p.id+'">'+q+'</span>'
+      +'<button class="qb qp" onclick="setQty(\''+p.id+'\',1)">+</button>'
+      +'</div></div></div>';
   }).join('')+'</div>';
 }
 
 function setQty(id,d){
   var cur=S.cart[id]||0; var next=Math.max(0,cur+d);
-  if(next===0) delete S.cart[id]; else S.cart[id]=next;
+  if(next===0){ delete S.cart[id]; } else { S.cart[id]=next; }
   var qv=document.getElementById('qv-'+id); if(qv) qv.textContent=next;
   var pc=document.getElementById('pc-'+id); if(pc) pc.className='pc'+(next>0?' sel':'');
   renderCartFt(); renderNav();
@@ -497,12 +531,18 @@ function renderDlvBtns(){
   LOCS.forEach(function(loc){
     var btn=document.createElement('button');
     btn.textContent=loc; btn.dataset.loc=loc; btn.className='dlv-btn';
-    if(loc===S.delivery){ btn.style.background='#C17F5A'; btn.style.color='#ffffff'; btn.style.borderColor='#C17F5A'; btn.style.fontWeight='800'; }
-    else { btn.style.background='#FDE8EF'; btn.style.color='#7A5A4A'; btn.style.borderColor='transparent'; btn.style.fontWeight='700'; }
-    btn.style.flex='1'; btn.style.padding='10px 0'; btn.style.borderRadius='12px'; btn.style.border='1.5px solid transparent';
-    btn.addEventListener('click',function(){ S.delivery=loc; renderDlvBtns(); });
+    applyDlv(btn, loc===S.delivery);
+    btn.addEventListener('click',function(){
+      S.delivery=loc;
+      document.querySelectorAll('.dlv-btn').forEach(function(b){ applyDlv(b, b.dataset.loc===loc); });
+    });
     wrap.appendChild(btn);
   });
+}
+
+function applyDlv(btn,sel){
+  if(sel){ btn.style.background='#C17F5A'; btn.style.color='#ffffff'; btn.style.borderColor='#C17F5A'; btn.style.fontWeight='800'; }
+  else    { btn.style.background='#FDE8EF'; btn.style.color='#7A5A4A'; btn.style.borderColor='transparent'; btn.style.fontWeight='700'; }
 }
 
 async function doOrder(){
@@ -514,6 +554,9 @@ async function doOrder(){
   catch(e){ showToast('주문 실패: '+e.message,'error'); }
 }
 
+/* ─────────────────────────────────────────────
+   배송 트래킹 바
+───────────────────────────────────────────── */
 function deliveryTrackHtml(o){
   if(o.status==='취소' || !(o.status==='주문완료' || o.deliveryStatus)) return '';
   var steps=['주문접수','주문완료','배송 중','배송완료'];
@@ -528,6 +571,9 @@ function deliveryTrackHtml(o){
   return html+'</div></div>';
 }
 
+/* ─────────────────────────────────────────────
+   주문자 주문 내역
+───────────────────────────────────────────── */
 function renderBuyerOrders(){
   var list=document.getElementById('orders-list');
   var my=S.orders.filter(function(o){return o.userId===S.user.id;}).reverse();
@@ -543,7 +589,7 @@ function renderBuyerOrders(){
 }
 
 /* ─────────────────────────────────────────────
-   관리자 주문 관리
+   판매자 주문 관리
 ───────────────────────────────────────────── */
 function renderAdminOrders(){
   var list=document.getElementById('admin-orders-list');
@@ -558,7 +604,16 @@ function renderAdminOrders(){
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
     var approveAct=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="approveOrder(\''+o.id+'\')" style="background:#4CAF82;color:#ffffff;border:none;">✅ 승인</button><button class="obtn" onclick="openCancelModal(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">❌ 취소</button></div>':'';
     var deliveryAct=o.status==='주문완료'&&o.deliveryStatus!=='배송완료'?'<div class="oact"><button class="obtn" onclick="completeDelivery(\''+o.id+'\')" style="background:#3B82F6;color:#ffffff;border:none;">🏁 배송완료 처리</button></div>':'';
-    return '<div class="order-card"><div class="om"><div><div style="margin-bottom:3px;"><strong style="font-size:15px;color:var(--tx);">'+esc(o.userName)+'</strong></div><div style="font-size:13px;color:var(--mu);margin-bottom:3px;">📞 '+esc(o.userPhone)+'</div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;"><span class="stat '+sc+'">'+sl+'</span>'+dBadge+'</div></div><div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'+cbox+approveAct+deliveryAct+'</div>';
+    return '<div class="order-card">'
+      +'<div class="om"><div>'
+      +'<div style="margin-bottom:3px;"><strong style="font-size:15px;color:var(--tx);">'+esc(o.userName)+'</strong></div>'
+      +'<div style="font-size:13px;color:var(--mu);margin-bottom:3px;">📞 '+esc(o.userPhone)+'</div>'
+      +'<div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div>'
+      +'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">'
+      +'<span class="stat '+sc+'">'+sl+'</span>'+dBadge
+      +'</div></div>'
+      +'<div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'
+      +cbox+approveAct+deliveryAct+'</div>';
   }).join('');
 }
 
@@ -574,14 +629,17 @@ async function confirmCancel(){
 }
 
 /* ─────────────────────────────────────────────
-   관리자 상품 관리
+   상품 관리
 ───────────────────────────────────────────── */
 function renderProductList(){
   var list=document.getElementById('products-list');
   if(!S.products.length){ list.innerHTML='<div class="empty"><div class="ei">🍽️</div><p>등록된 상품이 없습니다<br>상품을 추가해보세요!</p></div>'; return; }
   list.innerHTML=S.products.map(function(p){
     var img=p.photo?'<img src="'+p.photo+'" style="width:100%;height:100%;object-fit:cover;">':'<span>🍞</span>';
-    return '<div class="pi-item"><div class="pi-th">'+img+'</div><div style="flex:1;"><p style="font-weight:700;font-size:15px;color:var(--tx);margin-bottom:4px;">'+esc(p.name)+'</p><p style="font-weight:800;font-size:15px;color:var(--p);">'+p.price.toLocaleString()+'원</p></div><button onclick="doDeleteProduct(\''+p.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);flex-shrink:0;">삭제</button></div>';
+    return '<div class="pi-item"><div class="pi-th">'+img+'</div>'
+      +'<div style="flex:1;"><p style="font-weight:700;font-size:15px;color:var(--tx);margin-bottom:4px;">'+esc(p.name)+'</p>'
+      +'<p style="font-weight:800;font-size:15px;color:var(--p);">'+p.price.toLocaleString()+'원</p></div>'
+      +'<button onclick="doDeleteProduct(\''+p.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);flex-shrink:0;">삭제</button></div>';
   }).join('');
 }
 
@@ -594,14 +652,17 @@ function toggleAddProduct(){
 function triggerFileInput(){ document.getElementById('np-photo-file').click(); }
 function handlePhotoSelect(e){
   var file=e.target.files[0]; if(!file) return;
+  if(!file.type.startsWith('image/')){ showToast('이미지 파일만 첨부 가능합니다.','warn'); return; }
+  if(file.size>4*1024*1024){ showToast('4MB 이하 이미지만 첨부 가능합니다.','warn'); return; }
   var reader=new FileReader();
   reader.onload=function(ev){
     var img=new Image();
     img.onload=function(){
-      var c=document.createElement('canvas'); var w=img.width, h=img.height, max=800;
-      if(w>max||h>max){ if(w>h){h=Math.round(h*(max/w));w=max;}else{w=Math.round(w*(max/h));h=max;} }
-      c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-      S.pendingPhoto=c.toDataURL('image/jpeg',0.8);
+      var MAX=800; var w=img.width; var h=img.height;
+      if(w>MAX||h>MAX){ if(w>h){h=Math.round(h*(MAX/w));w=MAX;}else{w=Math.round(w*(MAX/h));h=MAX;} }
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      S.pendingPhoto=c.toDataURL('image/jpeg',0.82);
       document.getElementById('np-preview').src=S.pendingPhoto;
       document.getElementById('np-preview').style.display='block';
       document.getElementById('upload-placeholder').style.display='none';
@@ -613,7 +674,8 @@ function handlePhotoSelect(e){
 }
 function clearPhoto(e){ e.stopPropagation(); resetPhotoArea(); }
 function resetPhotoArea(){
-  S.pendingPhoto=null; document.getElementById('np-photo-file').value='';
+  S.pendingPhoto=null;
+  try{ document.getElementById('np-photo-file').value=''; }catch(ex){}
   var pv=document.getElementById('np-preview'); if(pv){ pv.style.display='none'; pv.src=''; }
   document.getElementById('upload-placeholder').style.display='flex';
   document.getElementById('photo-change-btn').style.display='none';
@@ -625,12 +687,13 @@ async function doAddProduct(){
   var err=document.getElementById('np-err');
   if(!name){ err.textContent='상품명을 입력해주세요.'; err.style.display='block'; return; }
   if(!price||price<=0){ err.textContent='올바른 가격을 입력해주세요.'; err.style.display='block'; return; }
-  
+  err.style.display='none';
   try{
     await DB.addProduct({id:Date.now().toString(),name:name,price:price,photo:S.pendingPhoto||''});
+    document.getElementById('np-name').value=''; document.getElementById('np-price').value='';
     document.getElementById('add-product-form').style.display='none';
     document.getElementById('toggle-add-btn').textContent='+ 추가';
-    renderProductList(); showToast('상품이 추가되었습니다! 🍞');
+    resetPhotoArea(); renderProductList(); showToast('상품이 추가되었습니다! 🍞');
   }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
 }
 
@@ -641,7 +704,7 @@ async function doDeleteProduct(id){
 }
 
 /* ─────────────────────────────────────────────
-   관리자 설정 정보
+   설정
 ───────────────────────────────────────────── */
 async function doChangePw(){
   var cur=document.getElementById('cp-cur').value; var nw=document.getElementById('cp-new').value; var nw2=document.getElementById('cp-new2').value;
@@ -669,7 +732,21 @@ function renderInfoBank(){
   if(el) el.innerHTML='<p style="font-size:14px;margin-bottom:5px;color:var(--tx);"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p>';
 }
 
-/* 앱 구동 */
+/* ─────────────────────────────────────────────
+   토스트 / 키보드
+───────────────────────────────────────────── */
+var _tt;
+function showToast(msg,type){
+  var t=document.getElementById('toast');
+  t.style.background=type==='warn'?'#E8A020':type==='error'?'#D94444':'#4CAF82';
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(_tt); _tt=setTimeout(function(){ t.style.display='none'; }, 3200);
+}
+document.addEventListener('keypress',function(e){
+  if(e.key==='Enter'){ if(S.view==='login') doLogin(); else if(S.view==='register') doRegister(); }
+});
+
+/* 앱 시작 */
 init();
 </script>
 </body>
