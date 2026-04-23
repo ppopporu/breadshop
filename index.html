@@ -1178,22 +1178,23 @@ function renderAdminMembers(){
   }
   list.innerHTML=filtered.map(function(u){
     var orderCnt=S.orders.filter(function(o){return o.userId===u.id;}).length;
-    return '<div class="order-card">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">'
-      +'<div style="flex:1;">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
-      +'<span style="font-size:28px;">👤</span>'
-      +'<div><p style="font-size:15px;font-weight:800;color:var(--pd);margin-bottom:1px;">'+esc(u.name)+'</p>'
-      +'<p style="font-size:12px;color:var(--mu);">'+esc(u.email)+'</p></div></div>'
-      +'<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:1.9;">'
+    var uid=u.id; var uname=esc(u.name);
+    return '<div class="order-card" style="padding:16px;">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">'
+      +'<span style="font-size:30px;">👤</span>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<p style="font-size:15px;font-weight:800;color:var(--pd);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+uname+'</p>'
+      +'<p style="font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(u.email)+'</p>'
+      +'</div></div>'
+      +'<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:2;margin-bottom:12px;">'
       +'<div>📞 '+esc(u.phone||'-')+'</div>'
       +'<div>📦 주문 '+orderCnt+'건</div>'
-      +'</div></div>'
-      +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">'
-      +'<button onclick="doResetUserPw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#E3F2FD;color:#1565C0;border:1.5px solid rgba(21,101,192,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);white-space:nowrap;">🔑 PW<br>초기화</button>'
-      +'<button onclick="doForceWithdraw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);white-space:nowrap;">강제<br>탈퇴</button>'
       +'</div>'
-      +'</div></div>';
+      +'<div style="display:flex;gap:8px;">'
+      +'<button onclick="doResetUserPw(\''+uid+'\',\''+uname+'\')" style="flex:1;background:#E3F2FD;color:#1565C0;border:1.5px solid rgba(21,101,192,.3);border-radius:12px;padding:10px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">🔑 PW 초기화</button>'
+      +'<button onclick="doForceWithdraw(\''+uid+'\',\''+uname+'\')" style="flex:1;background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:10px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">강제 탈퇴</button>'
+      +'</div>'
+      +'</div>';
   }).join('');
 }
 
