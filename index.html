@@ -229,6 +229,31 @@ service cloud.firestore {
     <div class="fld"><label>이메일</label><input id="rg-email" placeholder="example@email.com" type="email"></div>
     <div class="fld"><label>비밀번호</label><input id="rg-pw" type="password" placeholder="비밀번호 (4자 이상)"></div>
     <div class="fld"><label>비밀번호 확인</label><input id="rg-pw2" type="password" placeholder="비밀번호 재입력"></div>
+    <!-- 약관 동의 -->
+    <div style="border-top:1px solid var(--bd);padding-top:14px;margin-top:4px;margin-bottom:14px;">
+     <p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:12px;">📋 약관 동의</p>
+     <!-- 전체 동의 -->
+     <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg);border-radius:12px;cursor:pointer;margin-bottom:10px;border:1.5px solid var(--bd);" id="all-agree-row">
+      <input type="checkbox" id="rg-all" onchange="toggleAllAgree(this)" style="width:18px;height:18px;accent-color:var(--p);cursor:pointer;flex-shrink:0;">
+      <span style="font-size:14px;font-weight:800;color:var(--pd);">전체 동의</span>
+     </label>
+     <!-- 이용약관 -->
+     <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#FFF9F5;border-radius:12px;margin-bottom:8px;border:1px solid var(--bd);">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;">
+       <input type="checkbox" id="rg-terms1" onchange="syncAllAgree()" style="width:16px;height:16px;accent-color:var(--p);cursor:pointer;flex-shrink:0;">
+       <span style="font-size:13px;font-weight:700;color:var(--tx);">[필수] 서비스 이용약관 동의</span>
+      </label>
+      <button type="button" onclick="openTermsModal('terms1')" style="background:none;border:none;color:var(--p);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);padding:2px 6px;flex-shrink:0;">보기</button>
+     </div>
+     <!-- 개인정보 -->
+     <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#FFF9F5;border-radius:12px;border:1px solid var(--bd);">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1;">
+       <input type="checkbox" id="rg-terms2" onchange="syncAllAgree()" style="width:16px;height:16px;accent-color:var(--p);cursor:pointer;flex-shrink:0;">
+       <span style="font-size:13px;font-weight:700;color:var(--tx);">[필수] 개인정보 수집 및 이용 동의</span>
+      </label>
+      <button type="button" onclick="openTermsModal('terms2')" style="background:none;border:none;color:var(--p);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);padding:2px 6px;flex-shrink:0;">보기</button>
+     </div>
+    </div>
     <p id="rg-err" class="err" style="display:none;"></p>
     <button onclick="doRegister()" class="btn-p">가입하기 🍞</button>
    </div>
@@ -248,6 +273,20 @@ service cloud.firestore {
   <div id="p-orders" class="pg">
    <h2 class="ph2">주문 내역</h2>
    <p class="ps">나의 주문 및 배송 현황을 확인해요</p>
+   <!-- 날짜 필터 -->
+   <div class="card" style="padding:14px 16px;margin-bottom:14px;">
+    <p class="sec-title" style="margin-bottom:10px;">📅 날짜로 조회</p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+     <input type="date" id="bf-from" style="flex:1;min-width:130px;border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#FFF9F5;color:var(--tx);outline:none;">
+     <span style="font-size:13px;color:var(--mu);flex-shrink:0;">~</span>
+     <input type="date" id="bf-to" style="flex:1;min-width:130px;border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#FFF9F5;color:var(--tx);outline:none;">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+     <button onclick="applyBuyerFilter()" style="flex:1;background:var(--p);color:#fff;border:none;border-radius:12px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">🔍 조회</button>
+     <button onclick="resetBuyerFilter()" style="flex:1;background:var(--pl);color:var(--p);border:none;border-radius:12px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">초기화</button>
+    </div>
+    <p id="buyer-filter-info" style="font-size:12px;color:var(--mu);margin-top:8px;display:none;text-align:center;"></p>
+   </div>
    <div id="orders-list"></div>
   </div>
 
@@ -275,6 +314,20 @@ service cloud.firestore {
   <!-- ════════ ADMIN: 주문 관리 ════════ -->
   <div id="p-admin-orders" class="pg">
    <h2 class="ph2">📋 주문 관리</h2><p id="admin-order-count" class="ps"></p>
+   <!-- 날짜 필터 -->
+   <div class="card" style="padding:14px 16px;margin-bottom:14px;">
+    <p class="sec-title" style="margin-bottom:10px;">📅 날짜로 조회</p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+     <input type="date" id="af-from" style="flex:1;min-width:130px;border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#FFF9F5;color:var(--tx);outline:none;">
+     <span style="font-size:13px;color:var(--mu);flex-shrink:0;">~</span>
+     <input type="date" id="af-to" style="flex:1;min-width:130px;border:1.5px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#FFF9F5;color:var(--tx);outline:none;">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+     <button onclick="applyAdminFilter()" style="flex:1;background:var(--p);color:#fff;border:none;border-radius:12px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">🔍 조회</button>
+     <button onclick="resetAdminFilter()" style="flex:1;background:var(--pl);color:var(--p);border:none;border-radius:12px;padding:9px 0;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">초기화</button>
+    </div>
+    <p id="admin-filter-info" style="font-size:12px;color:var(--mu);margin-top:8px;display:none;text-align:center;"></p>
+   </div>
    <div id="admin-orders-list"></div>
   </div>
 
@@ -358,6 +411,19 @@ service cloud.firestore {
    </div>
   </div>
  </div>
+ <!-- 약관 모달 -->
+ <div id="terms-modal" onclick="closeTermsModal()" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:600;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:var(--cd);border-radius:24px 24px 0 0;padding:0;width:100%;max-width:430px;max-height:80vh;display:flex;flex-direction:column;">
+   <div style="padding:20px 22px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+    <h3 id="terms-modal-title" style="font-size:16px;font-weight:800;color:var(--pd);"></h3>
+    <button onclick="closeTermsModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--mu);line-height:1;padding:0;">✕</button>
+   </div>
+   <div id="terms-modal-body" style="overflow-y:auto;padding:18px 22px 24px;font-size:13px;line-height:1.9;color:var(--tx);white-space:pre-wrap;"></div>
+   <div style="padding:14px 22px;padding-bottom:calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--bd);flex-shrink:0;">
+    <button id="terms-agree-btn" onclick="agreeFromModal()" class="btn-p">동의하고 닫기</button>
+   </div>
+  </div>
+ </div>
 </div><!-- /app -->
 
 <script>
@@ -399,7 +465,9 @@ var S = {
   adminPw:'admin',
   bankInfo:{bank:'농협은행', account:'301-0256-7890-11', holder:'빵집주인'},
   cart:{}, delivery:'부곡이웃교회',
-  cancelTarget:null, pendingPhoto:null
+  cancelTarget:null, pendingPhoto:null,
+  buyerDateFrom:'', buyerDateTo:'',
+  adminDateFrom:'', adminDateTo:''
 };
 
 function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -595,8 +663,8 @@ function nav(view){
   var hideNav=['setup','splash','login','register'];
   if(S.user && hideNav.indexOf(view)===-1){ navEl.style.display='flex'; renderNav(); } else { navEl.style.display='none'; }
   if(view==='shop'){ renderShop(); renderCartFt(); } else { cartFt.style.display='none'; }
-  if(view==='orders') renderBuyerOrders();
-  if(view==='admin-orders') renderAdminOrders();
+  if(view==='orders'){ initBuyerFilter(); renderBuyerOrders(); }
+  if(view==='admin-orders'){ initAdminFilter(); renderAdminOrders(); }
   if(view==='admin-products') renderProductList();
   if(view==='info') renderInfoBank();
   if(view==='admin-settings') populateBank();
@@ -649,13 +717,120 @@ async function doRegister(){
   if(!name||!phone||!email||!pw){ err.textContent='모든 항목을 입력해주세요.'; err.style.display='block'; return; }
   if(pw!==pw2){ err.textContent='비밀번호가 일치하지 않습니다.'; err.style.display='block'; return; }
   if(pw.length<4){ err.textContent='비밀번호는 4자 이상 입력해주세요.'; err.style.display='block'; return; }
+  if(!document.getElementById('rg-terms1').checked){ err.textContent='서비스 이용약관에 동의해주세요.'; err.style.display='block'; return; }
+  if(!document.getElementById('rg-terms2').checked){ err.textContent='개인정보 수집 및 이용에 동의해주세요.'; err.style.display='block'; return; }
   if(email==='admin' || S.users.find(function(u){ return u.email===email; })){ err.textContent='이미 사용 중인 이메일입니다.'; err.style.display='block'; return; }
   try{
     await DB.addUser({id:Date.now().toString(),name:name,phone:phone,email:email,password:pw});
     err.style.display='none';
     ['rg-name','rg-phone','rg-email','rg-pw','rg-pw2'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('rg-terms1').checked=false;
+    document.getElementById('rg-terms2').checked=false;
+    document.getElementById('rg-all').checked=false;
     showToast('회원가입 완료! 로그인해주세요. 🎉'); nav('login');
   }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
+}
+
+/* ─── 약관 체크박스 ─── */
+function toggleAllAgree(cb){
+  document.getElementById('rg-terms1').checked=cb.checked;
+  document.getElementById('rg-terms2').checked=cb.checked;
+}
+function syncAllAgree(){
+  var t1=document.getElementById('rg-terms1').checked;
+  var t2=document.getElementById('rg-terms2').checked;
+  document.getElementById('rg-all').checked=t1&&t2;
+}
+
+/* ─── 약관 모달 ─── */
+var _termsTarget=null;
+var TERMS_DATA={
+  terms1:{
+    title:'[필수] 서비스 이용약관 동의',
+    body:`본 약관은 "옷장 속의 작은 빵집"(이하 '서비스')의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정합니다.
+
+제1조 (목적)
+본 약관은 서비스 이용에 관한 기본적인 사항을 규정함을 목적으로 합니다.
+
+제2조 (회원가입)
+이용자는 본 약관 및 개인정보 수집·이용에 동의함으로써 회원가입이 가능합니다.
+회원은 정확한 정보를 입력해야 하며, 허위 정보 입력 시 서비스 이용이 제한될 수 있습니다.
+
+제3조 (서비스 내용)
+본 서비스는 교회 내 빵 주문 및 판매를 위한 모바일 앱입니다.
+회원은 앱을 통해 상품을 주문하고 지정된 장소에서 픽업할 수 있습니다.
+
+제4조 (주문 및 결제)
+회원은 앱을 통해 상품을 주문할 수 있습니다.
+결제는 외부 결제 서비스를 통해 이루어질 수 있습니다.
+결제 완료 후 주문이 확정됩니다.
+
+제5조 (취소 및 환불)
+주문 취소는 픽업 전까지 가능합니다.
+환불은 결제 수단에 따라 처리됩니다.
+단, 제품 특성상 픽업 이후에는 환불이 제한될 수 있습니다.
+
+제6조 (회원의 의무)
+회원은 서비스 이용 시 관련 법령 및 본 약관을 준수해야 합니다.
+타인의 정보를 도용하거나 서비스 운영을 방해하는 행위를 금지합니다.
+
+제7조 (서비스 제공의 제한)
+다음의 경우 서비스 이용이 제한될 수 있습니다.
+· 허위 정보 등록
+· 서비스 운영 방해
+· 기타 부정 이용 행위
+
+제8조 (책임의 제한)
+서비스는 교회 내부 운영을 기반으로 제공되며, 불가피한 사유로 서비스 제공이 지연될 수 있습니다.
+천재지변 및 운영상의 불가피한 사유에 대해 책임을 제한할 수 있습니다.
+
+제9조 (약관의 변경)
+본 약관은 관련 법령에 따라 변경될 수 있으며, 변경 시 사전 공지합니다.
+
+위 약관의 내용을 충분히 확인하였으며, 서비스 이용약관에 동의합니다.`
+  },
+  terms2:{
+    title:'[필수] 개인정보 수집 및 이용 동의',
+    body:`"옷장 속의 작은 빵집"(이하 '서비스')은 개인정보 보호법에 따라 이용자의 개인정보를 보호하며, 아래와 같이 개인정보를 수집·이용합니다.
+
+1. 수집하는 개인정보 항목
+  - 필수 항목: 이름, 이메일, 휴대전화번호
+
+2. 개인정보 수집 및 이용 목적
+  - 회원 가입 및 관리
+  - 빵 주문 접수 및 확인
+  - 결제 및 환불 처리
+  - 픽업 안내 및 공지사항 전달
+  - 고객 문의 대응
+
+3. 보유 및 이용 기간
+  - 회원 탈퇴 시까지 보유
+  - 단, 관계 법령에 따라 일정 기간 보관 필요 시 해당 기간 동안 보관
+
+4. 동의 거부 권리 및 불이익
+  - 이용자는 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다.
+  - 단, 필수 항목에 대한 동의를 거부할 경우 서비스 이용이 제한될 수 있습니다.
+
+위 내용을 충분히 확인하였으며, 개인정보 수집 및 이용에 동의합니다.`
+  }
+};
+function openTermsModal(key){
+  _termsTarget=key;
+  var data=TERMS_DATA[key];
+  document.getElementById('terms-modal-title').textContent=data.title;
+  document.getElementById('terms-modal-body').textContent=data.body;
+  document.getElementById('terms-modal').style.display='flex';
+}
+function closeTermsModal(){
+  document.getElementById('terms-modal').style.display='none';
+  _termsTarget=null;
+}
+function agreeFromModal(){
+  if(_termsTarget){
+    document.getElementById('rg-'+_termsTarget).checked=true;
+    syncAllAgree();
+  }
+  closeTermsModal();
 }
 
 function doLogout(){ S.user=null; S.cart={}; nav('login'); }
@@ -747,29 +922,122 @@ function deliveryTrackHtml(o){
 /* ─────────────────────────────────────────────
    주문자 주문 내역
 ───────────────────────────────────────────── */
+function parseKoDate(s){
+  if(!s) return null;
+  var clean=s.replace(/\s/g,'');
+  var parts=clean.split('.');
+  if(parts.length<3) return null;
+  var y=parseInt(parts[0]); var m=parseInt(parts[1])-1; var d=parseInt(parts[2]);
+  if(isNaN(y)||isNaN(m)||isNaN(d)) return null;
+  return new Date(y,m,d);
+}
+function inDateRange(o, from, to){
+  var d=parseKoDate(o.createdAt); if(!d) return true;
+  if(from){ var f=new Date(from); if(d<f) return false; }
+  if(to){ var t=new Date(to); t.setHours(23,59,59,999); if(d>t) return false; }
+  return true;
+}
+
+function todayStr(){
+  var d=new Date(); var y=d.getFullYear(); var m=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+function initBuyerFilter(){
+  var today=todayStr();
+  if(!S.buyerDateFrom && !S.buyerDateTo){
+    S.buyerDateFrom=today; S.buyerDateTo=today;
+  }
+  document.getElementById('bf-from').value=S.buyerDateFrom;
+  document.getElementById('bf-to').value=S.buyerDateTo;
+}
+function initAdminFilter(){
+  var today=todayStr();
+  if(!S.adminDateFrom && !S.adminDateTo){
+    S.adminDateFrom=today; S.adminDateTo=today;
+  }
+  document.getElementById('af-from').value=S.adminDateFrom;
+  document.getElementById('af-to').value=S.adminDateTo;
+}
+
+function applyBuyerFilter(){
+  var from=document.getElementById('bf-from').value;
+  var to=document.getElementById('bf-to').value;
+  if(!from&&!to){ showToast('조회할 날짜를 선택해주세요.','warn'); return; }
+  S.buyerDateFrom=from; S.buyerDateTo=to;
+  renderBuyerOrders();
+}
+function resetBuyerFilter(){
+  var today=todayStr();
+  S.buyerDateFrom=today; S.buyerDateTo=today;
+  document.getElementById('bf-from').value=today;
+  document.getElementById('bf-to').value=today;
+  renderBuyerOrders();
+}
+
 function renderBuyerOrders(){
   var list=document.getElementById('orders-list');
+  var from=S.buyerDateFrom||''; var to=S.buyerDateTo||'';
   var my=S.orders.filter(function(o){return o.userId===S.user.id;}).reverse();
-  if(!my.length){ list.innerHTML='<div class="empty"><div class="ei">📭</div><p>아직 주문 내역이 없어요</p></div>'; return; }
-  list.innerHTML=my.map(function(o){
+  var filtered=my.filter(function(o){return inDateRange(o,from,to);});
+  var infoEl=document.getElementById('buyer-filter-info');
+  if(from||to){
+    var label=(from&&to)?(from+' ~ '+to):from?from+' 이후':to+' 이전';
+    infoEl.textContent='📅 '+label+' · '+filtered.length+'건 조회됨'; infoEl.style.display='block';
+  } else { infoEl.style.display='none'; }
+  if(!filtered.length){ list.innerHTML='<div class="empty"><div class="ei">📭</div><p>'+(my.length?'해당 기간에 주문 내역이 없어요':'아직 주문 내역이 없어요')+'</p></div>'; return; }
+  list.innerHTML=filtered.map(function(o){
     var sc=o.status==='주문중'?'s-w':o.status==='주문완료'?'s-g':'s-r';
     var sl=o.status==='주문중'?'🕐 주문 중':o.status==='주문완료'?'✅ 주문 완료':'❌ 취소됨';
     var rows=o.items.map(function(it){return '<div class="orow"><span>'+esc(it.name)+' × '+it.qty+'</span><span class="oamt">'+(it.price*it.qty).toLocaleString()+'원</span></div>';}).join('');
     var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p><p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
-    return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'+bank+cbox+deliveryTrackHtml(o)+'</div>';
+    var cancelBtn=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="doBuyerCancel(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">🗑️ 주문 취소</button></div>':'';
+    return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'+bank+cbox+cancelBtn+deliveryTrackHtml(o)+'</div>';
   }).join('');
+}
+
+async function doBuyerCancel(id){
+  if(!confirm('주문을 취소하시겠습니까?\n취소 후에는 되돌릴 수 없습니다.')) return;
+  try{
+    await DB.updOrder(id,{status:'취소',cancelReason:'주문자 취소 요청'});
+    renderBuyerOrders(); showToast('주문이 취소되었습니다.');
+  }catch(e){ showToast('오류: '+e.message,'error'); }
 }
 
 /* ─────────────────────────────────────────────
    판매자 주문 관리
 ───────────────────────────────────────────── */
+function applyAdminFilter(){
+  var from=document.getElementById('af-from').value;
+  var to=document.getElementById('af-to').value;
+  if(!from&&!to){ showToast('조회할 날짜를 선택해주세요.','warn'); return; }
+  S.adminDateFrom=from; S.adminDateTo=to;
+  renderAdminOrders();
+}
+function resetAdminFilter(){
+  var today=todayStr();
+  S.adminDateFrom=today; S.adminDateTo=today;
+  document.getElementById('af-from').value=today;
+  document.getElementById('af-to').value=today;
+  renderAdminOrders();
+}
+
 function renderAdminOrders(){
   var list=document.getElementById('admin-orders-list');
-  document.getElementById('admin-order-count').textContent='총 '+S.orders.length+'건의 주문';
+  var from=S.adminDateFrom||''; var to=S.adminDateTo||'';
   var sorted=S.orders.slice().reverse();
-  if(!sorted.length){ list.innerHTML='<div class="empty"><div class="ei">📭</div><p>아직 주문이 없습니다</p></div>'; return; }
-  list.innerHTML=sorted.map(function(o){
+  var filtered=sorted.filter(function(o){return inDateRange(o,from,to);});
+  var infoEl=document.getElementById('admin-filter-info');
+  if(from||to){
+    var label=(from&&to)?(from+' ~ '+to):from?from+' 이후':to+' 이전';
+    infoEl.textContent='📅 '+label+' · '+filtered.length+'건 조회됨'; infoEl.style.display='block';
+    document.getElementById('admin-order-count').textContent='전체 '+S.orders.length+'건 중 '+filtered.length+'건 표시';
+  } else {
+    infoEl.style.display='none';
+    document.getElementById('admin-order-count').textContent='총 '+S.orders.length+'건의 주문';
+  }
+  if(!filtered.length){ list.innerHTML='<div class="empty"><div class="ei">📭</div><p>'+(S.orders.length?'해당 기간에 주문이 없습니다':'아직 주문이 없습니다')+'</p></div>'; return; }
+  list.innerHTML=filtered.map(function(o){
     var sc=o.status==='주문중'?'s-w':o.status==='주문완료'?'s-g':'s-r';
     var sl=o.status==='주문중'?'🕐 주문 중':o.status==='주문완료'?'✅ 주문 완료':'❌ 취소됨';
     var dBadge=o.status==='주문완료'?(o.deliveryStatus==='배송완료'?'<span class="dstat d-done">🏁 배송완료</span>':'<span class="dstat d-ing">🚚 배송 중</span>'):'';
