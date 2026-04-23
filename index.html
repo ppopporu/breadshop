@@ -361,6 +361,64 @@ service cloud.firestore {
    <div id="products-list"></div>
   </div>
 
+  <!-- ════════ ADMIN: 회원 관리 ════════ -->
+  <div id="p-admin-members" class="pg">
+   <h2 class="ph2">👥 회원 관리</h2>
+   <p class="ps">가입 회원을 조회하고 관리해요</p>
+   <!-- 검색 -->
+   <div class="card" style="padding:14px 16px;margin-bottom:14px;">
+    <p class="sec-title" style="margin-bottom:10px;">🔍 회원 검색</p>
+    <div style="display:flex;gap:8px;">
+     <input id="member-search" placeholder="이름 또는 이메일 검색" style="flex:1;border:1.5px solid var(--bd);border-radius:10px;padding:9px 12px;font-size:14px;font-family:var(--f);background:#FFF9F5;color:var(--tx);outline:none;">
+     <button onclick="renderAdminMembers()" style="background:var(--p);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);flex-shrink:0;">조회</button>
+    </div>
+   </div>
+   <p id="admin-member-count" class="ps" style="margin-bottom:10px;"></p>
+   <div id="admin-members-list"></div>
+  </div>
+
+  <!-- ════════ BUYER: 내 계정 ════════ -->
+  <div id="p-my-account" class="pg">
+   <h2 class="ph2">👤 내 계정</h2>
+   <p class="ps">계정 정보를 조회하고 관리해요</p>
+   <!-- 계정 정보 -->
+   <div class="card" style="margin-bottom:14px;">
+    <p class="sec-title">📋 계정 정보</p>
+    <div id="my-account-info" style="background:var(--bg);border-radius:14px;padding:14px 16px;"></div>
+   </div>
+   <!-- 닉네임 변경 -->
+   <div class="card" style="margin-bottom:14px;">
+    <p class="sec-title">✏️ 닉네임 변경</p>
+    <div class="fld"><label>새 닉네임</label><input id="my-name" placeholder="새 닉네임 입력"></div>
+    <p id="my-name-err" class="err" style="display:none;"></p>
+    <button onclick="doChangeName()" class="btn-p">닉네임 변경</button>
+   </div>
+   <!-- 전화번호 변경 -->
+   <div class="card" style="margin-bottom:14px;">
+    <p class="sec-title">📞 전화번호 변경</p>
+    <div class="fld"><label>새 전화번호</label><input id="my-phone" placeholder="010-0000-0000" type="tel"></div>
+    <p id="my-phone-err" class="err" style="display:none;"></p>
+    <button onclick="doChangePhone()" class="btn-p">전화번호 변경</button>
+   </div>
+   <!-- 비밀번호 변경 -->
+   <div class="card" style="margin-bottom:14px;">
+    <p class="sec-title">🔒 비밀번호 변경</p>
+    <div class="fld"><label>현재 비밀번호</label><input id="my-cur-pw" type="password" placeholder="현재 비밀번호"></div>
+    <div class="fld"><label>새 비밀번호</label><input id="my-new-pw" type="password" placeholder="새 비밀번호 (4자 이상)"></div>
+    <div class="fld"><label>새 비밀번호 확인</label><input id="my-new-pw2" type="password" placeholder="새 비밀번호 재입력"></div>
+    <p id="my-pw-err" class="err" style="display:none;"></p>
+    <button onclick="doChangeMyPw()" class="btn-p">비밀번호 변경</button>
+   </div>
+   <!-- 회원 탈퇴 -->
+   <div class="card" style="border:1px solid rgba(217,68,68,.3);margin-bottom:14px;">
+    <p class="sec-title" style="color:var(--re);">⚠️ 회원 탈퇴</p>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:14px;">탈퇴 시 모든 주문 내역 및 계정 정보가 삭제되며 복구할 수 없습니다.</p>
+    <div class="fld"><label>비밀번호 확인</label><input id="my-del-pw" type="password" placeholder="비밀번호를 입력해주세요"></div>
+    <p id="my-del-err" class="err" style="display:none;"></p>
+    <button onclick="doDeleteMyAccount()" style="display:block;width:100%;padding:12px 0;border:1.5px solid rgba(217,68,68,.4);border-radius:24px;background:#FFEBEE;color:var(--re);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--f);">회원 탈퇴</button>
+   </div>
+  </div>
+
   <!-- ════════ ADMIN: 설정 ════════ -->
   <div id="p-admin-settings" class="pg">
    <h2 class="ph2">⚙️ 설정</h2><p class="ps">관리자 계정 및 계좌 정보 설정</p>
@@ -485,6 +543,7 @@ var DB = {
   delProduct: async function(id){ await FB.del('products',id); S.products=S.products.filter(function(p){return p.id!==id;}); },
   addUser:    async function(u){ await FB.setDoc('users',u.id,u); S.users=S.users.concat([u]); },
   addOrder:   async function(o){ await FB.setDoc('orders',o.id,o); S.orders=S.orders.concat([o]); },
+  delUser:    async function(id){ await FB.del('users',id); S.users=S.users.filter(function(u){return u.id!==id;}); },
   updOrder:   async function(id,data){ await FB.upd('orders',id,data); S.orders=S.orders.map(function(o){return o.id===id?Object.assign({},o,data):o;}); },
   saveConfig: async function(){ return FB.setDoc('config','main',{adminPw:S.adminPw, bankInfo:S.bankInfo}); }
 };
@@ -657,7 +716,7 @@ function renderLogos(){
 function nav(view){
   S.view=view;
   document.querySelectorAll('.pg,.pg-full').forEach(function(p){ p.classList.remove('on'); });
-  var map={setup:'p-setup',splash:'p-splash',login:'p-login',register:'p-register',shop:'p-shop',orders:'p-orders',info:'p-info','admin-orders':'p-admin-orders','admin-products':'p-admin-products','admin-settings':'p-admin-settings'};
+  var map={setup:'p-setup',splash:'p-splash',login:'p-login',register:'p-register',shop:'p-shop',orders:'p-orders',info:'p-info','admin-orders':'p-admin-orders','admin-products':'p-admin-products','admin-settings':'p-admin-settings','admin-members':'p-admin-members','my-account':'p-my-account'};
   var el=document.getElementById(map[view]); if(el) el.classList.add('on');
   var navEl=document.getElementById('nav'); var cartFt=document.getElementById('cart-ft');
   var hideNav=['setup','splash','login','register'];
@@ -666,6 +725,8 @@ function nav(view){
   if(view==='orders'){ initBuyerFilter(); renderBuyerOrders(); }
   if(view==='admin-orders'){ initAdminFilter(); renderAdminOrders(); }
   if(view==='admin-products') renderProductList();
+  if(view==='admin-members') renderAdminMembers();
+  if(view==='my-account') renderMyAccount();
   if(view==='info') renderInfoBank();
   if(view==='admin-settings') populateBank();
   document.getElementById('screen').scrollTop=0;
@@ -675,8 +736,8 @@ function renderNav(){
   var navEl=document.getElementById('nav');
   var isAdmin=S.user && S.user.role==='admin';
   var items=isAdmin
-    ?[{v:'admin-orders',i:'📋',l:'주문관리'},{v:'admin-products',i:'🍞',l:'상품관리'},{v:'admin-settings',i:'⚙️',l:'설정'},{v:'_logout',i:'🚪',l:'로그아웃'}]
-    :[{v:'shop',i:'🛒',l:'주문하기',badge:true},{v:'orders',i:'📄',l:'주문내역'},{v:'info',i:'📍',l:'매장정보'},{v:'_logout',i:'🚪',l:'로그아웃'}];
+    ?[{v:'admin-orders',i:'📋',l:'주문관리'},{v:'admin-products',i:'🍞',l:'상품관리'},{v:'admin-members',i:'👥',l:'회원관리'},{v:'admin-settings',i:'⚙️',l:'설정'},{v:'_logout',i:'🚪',l:'로그아웃'}]
+    :[{v:'shop',i:'🛒',l:'주문하기',badge:true},{v:'orders',i:'📄',l:'주문내역'},{v:'my-account',i:'👤',l:'내 계정'},{v:'info',i:'📍',l:'매장정보'},{v:'_logout',i:'🚪',l:'로그아웃'}];
   navEl.innerHTML=items.map(function(it){
     var cnt=it.badge?Object.values(S.cart).reduce(function(a,b){return a+b;},0):0;
     var bdg=cnt>0?'<span class="bdg">'+cnt+'</span>':'';
@@ -1070,6 +1131,132 @@ async function confirmCancel(){
   if(!reason){ showToast('취소 사유를 입력해주세요.','warn'); return; }
   try{ await DB.updOrder(S.cancelTarget,{status:'취소',cancelReason:reason}); closeModal(); renderAdminOrders(); showToast('주문을 취소했습니다.'); }
   catch(e){ showToast('오류: '+e.message,'error'); }
+}
+
+/* ─────────────────────────────────────────────
+   판매자 회원 관리
+───────────────────────────────────────────── */
+function renderAdminMembers(){
+  var kw=(document.getElementById('member-search')||{value:''}).value.trim().toLowerCase();
+  var list=document.getElementById('admin-members-list');
+  var filtered=S.users.filter(function(u){
+    if(!kw) return true;
+    return (u.name||'').toLowerCase().includes(kw)||(u.email||'').toLowerCase().includes(kw);
+  });
+  document.getElementById('admin-member-count').textContent='총 '+S.users.length+'명 중 '+filtered.length+'명 표시';
+  if(!filtered.length){
+    list.innerHTML='<div class="empty"><div class="ei">👤</div><p>'+(S.users.length?'검색 결과가 없습니다':'가입 회원이 없습니다')+'</p></div>'; return;
+  }
+  list.innerHTML=filtered.map(function(u){
+    var orderCnt=S.orders.filter(function(o){return o.userId===u.id;}).length;
+    return '<div class="order-card">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">'
+      +'<div style="flex:1;">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+      +'<span style="font-size:28px;">👤</span>'
+      +'<div><p style="font-size:15px;font-weight:800;color:var(--pd);margin-bottom:1px;">'+esc(u.name)+'</p>'
+      +'<p style="font-size:12px;color:var(--mu);">'+esc(u.email)+'</p></div></div>'
+      +'<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:1.9;">'
+      +'<div>📞 '+esc(u.phone||'-')+'</div>'
+      +'<div>📦 주문 '+orderCnt+'건</div>'
+      +'</div></div>'
+      +'<button onclick="doForceWithdraw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);flex-shrink:0;white-space:nowrap;">강제<br>탈퇴</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+async function doForceWithdraw(id, name){
+  if(!confirm('['+name+'] 회원을 강제 탈퇴 처리하시겠습니까?\n탈퇴 시 해당 회원의 계정 정보가 삭제됩니다.')) return;
+  try{
+    await DB.delUser(id);
+    renderAdminMembers();
+    showToast(name+' 회원이 탈퇴 처리되었습니다.');
+  }catch(e){ showToast('오류: '+e.message,'error'); }
+}
+
+/* ─────────────────────────────────────────────
+   주문자 내 계정
+───────────────────────────────────────────── */
+function renderMyAccount(){
+  var u=S.user;
+  var el=document.getElementById('my-account-info');
+  if(el) el.innerHTML=
+    '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--tx);">'
+    +'<div style="display:flex;justify-content:space-between;"><span style="color:var(--mu);font-weight:600;">닉네임</span><span style="font-weight:700;">'+esc(u.name)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;"><span style="color:var(--mu);font-weight:600;">이메일</span><span style="font-weight:700;">'+esc(u.email)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;"><span style="color:var(--mu);font-weight:600;">전화번호</span><span style="font-weight:700;">'+esc(u.phone||'-')+'</span></div>'
+    +'</div>';
+  document.getElementById('my-name').value='';
+  document.getElementById('my-phone').value='';
+  document.getElementById('my-cur-pw').value='';
+  document.getElementById('my-new-pw').value='';
+  document.getElementById('my-new-pw2').value='';
+  document.getElementById('my-del-pw').value='';
+  ['my-name-err','my-phone-err','my-pw-err','my-del-err'].forEach(function(id){ document.getElementById(id).style.display='none'; });
+}
+
+async function doChangeName(){
+  var name=document.getElementById('my-name').value.trim();
+  var err=document.getElementById('my-name-err');
+  if(!name){ err.textContent='새 닉네임을 입력해주세요.'; err.style.display='block'; return; }
+  if(name.length<2){ err.textContent='닉네임은 2자 이상 입력해주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  try{
+    await DB.updOrder; // no-op warm-up
+    await FB.upd('users', S.user.id, {name:name});
+    S.users=S.users.map(function(u){return u.id===S.user.id?Object.assign({},u,{name:name}):u;});
+    S.user=Object.assign({},S.user,{name:name});
+    document.getElementById('my-name').value='';
+    renderMyAccount(); showToast('닉네임이 변경되었습니다. ✏️');
+  }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
+}
+
+async function doChangePhone(){
+  var phone=document.getElementById('my-phone').value.trim();
+  var err=document.getElementById('my-phone-err');
+  if(!phone){ err.textContent='새 전화번호를 입력해주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  try{
+    await FB.upd('users', S.user.id, {phone:phone});
+    S.users=S.users.map(function(u){return u.id===S.user.id?Object.assign({},u,{phone:phone}):u;});
+    S.user=Object.assign({},S.user,{phone:phone});
+    document.getElementById('my-phone').value='';
+    renderMyAccount(); showToast('전화번호가 변경되었습니다. 📞');
+  }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
+}
+
+async function doChangeMyPw(){
+  var cur=document.getElementById('my-cur-pw').value;
+  var nw=document.getElementById('my-new-pw').value;
+  var nw2=document.getElementById('my-new-pw2').value;
+  var err=document.getElementById('my-pw-err');
+  if(!cur||!nw||!nw2){ err.textContent='모든 항목을 입력해주세요.'; err.style.display='block'; return; }
+  if(cur!==S.user.password){ err.textContent='현재 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
+  if(nw!==nw2){ err.textContent='새 비밀번호가 일치하지 않습니다.'; err.style.display='block'; return; }
+  if(nw.length<4){ err.textContent='비밀번호는 4자 이상 입력해주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  try{
+    await FB.upd('users', S.user.id, {password:nw});
+    S.users=S.users.map(function(u){return u.id===S.user.id?Object.assign({},u,{password:nw}):u;});
+    S.user=Object.assign({},S.user,{password:nw});
+    ['my-cur-pw','my-new-pw','my-new-pw2'].forEach(function(id){ document.getElementById(id).value=''; });
+    showToast('비밀번호가 변경되었습니다. 🔒');
+  }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
+}
+
+async function doDeleteMyAccount(){
+  var pw=document.getElementById('my-del-pw').value;
+  var err=document.getElementById('my-del-err');
+  if(!pw){ err.textContent='비밀번호를 입력해주세요.'; err.style.display='block'; return; }
+  if(pw!==S.user.password){ err.textContent='비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
+  if(!confirm('정말 탈퇴하시겠습니까?\n모든 계정 정보가 삭제되며 복구할 수 없습니다.')) return;
+  err.style.display='none';
+  try{
+    await DB.delUser(S.user.id);
+    S.user=null; S.cart={};
+    showToast('탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다.');
+    nav('login');
+  }catch(e){ err.textContent='오류: '+e.message; err.style.display='block'; }
 }
 
 /* ─────────────────────────────────────────────
