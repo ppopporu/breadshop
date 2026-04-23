@@ -942,21 +942,22 @@ function todayStr(){
   var d=new Date(); var y=d.getFullYear(); var m=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
   return y+'-'+m+'-'+dd;
 }
+function yesterdayStr(){
+  var d=new Date(); d.setDate(d.getDate()-1);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
 function initBuyerFilter(){
-  var today=todayStr();
-  if(!S.buyerDateFrom && !S.buyerDateTo){
-    S.buyerDateFrom=today; S.buyerDateTo=today;
-  }
+  var today=todayStr(); var yesterday=yesterdayStr();
+  if(!S.buyerDateFrom) S.buyerDateFrom=yesterday;
+  if(!S.buyerDateTo)   S.buyerDateTo=today;
   document.getElementById('bf-from').value=S.buyerDateFrom;
   document.getElementById('bf-to').value=S.buyerDateTo;
 }
 function initAdminFilter(){
-  var today=todayStr();
-  var d=new Date(); d.setDate(d.getDate()-1);
-  var yesterday=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  if(!S.adminDateFrom && !S.adminDateTo){
-    S.adminDateFrom=yesterday; S.adminDateTo=today;
-  }
+  var today=todayStr(); var yesterday=yesterdayStr();
+  if(!S.adminDateFrom) S.adminDateFrom=yesterday;
+  if(!S.adminDateTo)   S.adminDateTo=today;
   document.getElementById('af-from').value=S.adminDateFrom;
   document.getElementById('af-to').value=S.adminDateTo;
 }
@@ -969,9 +970,9 @@ function applyBuyerFilter(){
   renderBuyerOrders();
 }
 function resetBuyerFilter(){
-  var today=todayStr();
-  S.buyerDateFrom=today; S.buyerDateTo=today;
-  document.getElementById('bf-from').value=today;
+  var today=todayStr(); var yesterday=yesterdayStr();
+  S.buyerDateFrom=yesterday; S.buyerDateTo=today;
+  document.getElementById('bf-from').value=yesterday;
   document.getElementById('bf-to').value=today;
   renderBuyerOrders();
 }
@@ -1017,9 +1018,7 @@ function applyAdminFilter(){
   renderAdminOrders();
 }
 function resetAdminFilter(){
-  var today=todayStr();
-  var d=new Date(); d.setDate(d.getDate()-1);
-  var yesterday=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  var today=todayStr(); var yesterday=yesterdayStr();
   S.adminDateFrom=yesterday; S.adminDateTo=today;
   document.getElementById('af-from').value=yesterday;
   document.getElementById('af-to').value=today;
