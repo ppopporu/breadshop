@@ -749,21 +749,49 @@ function renderNav(){
 /* ─────────────────────────────────────────────
    인증
 ───────────────────────────────────────────── */
-function doLogin(){
+/* ─────────────────────────────────────────────
+   비밀번호 해시 (SHA-256 Web Crypto API)
+───────────────────────────────────────────── */
+async function hashPw(pw){
+  var buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+/* 해시 비교 — 저장값이 해시면 해시로, 평문이면 평문으로 비교 후 자동 업그레이드 */
+async function pwMatch(input, stored){
+  var h=await hashPw(input);
+  if(h===stored) return {ok:true, needUpgrade:false, hash:h};
+  if(input===stored) return {ok:true, needUpgrade:true, hash:h};  // 평문 → 해시로 업그레이드 필요
+  return {ok:false};
+}
+
+async function doLogin(){
   var id=document.getElementById('li-id').value.trim();
   var pw=document.getElementById('li-pw').value;
   var err=document.getElementById('li-err');
   if(!id||!pw){ err.textContent='아이디와 비밀번호를 입력해주세요.'; err.style.display='block'; return; }
-  if(id==='admin' && pw===S.adminPw){
-    S.user={id:'admin',name:'관리자',role:'admin'}; err.style.display='none';
-    document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
-    nav('admin-orders'); showToast('관리자로 로그인했습니다. 🍞'); return;
+  if(id==='admin'){
+    var r=await pwMatch(pw, S.adminPw);
+    if(r.ok){
+      if(r.needUpgrade){ S.adminPw=r.hash; await DB.saveConfig(); }
+      S.user={id:'admin',name:'관리자',role:'admin'}; err.style.display='none';
+      document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
+      nav('admin-orders'); showToast('관리자로 로그인했습니다. 🍞'); return;
+    }
+    err.textContent='아이디 또는 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return;
   }
-  var u=S.users.find(function(u){ return u.email===id && u.password===pw; });
+  var u=S.users.find(function(u){return u.email===id;});
   if(u){
-    S.user=Object.assign({},u,{role:'buyer'}); err.style.display='none';
-    document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
-    nav('shop'); showToast(u.name+'님, 환영합니다! 🍞'); return;
+    var r2=await pwMatch(pw, u.password);
+    if(r2.ok){
+      if(r2.needUpgrade){
+        await FB.upd('users',u.id,{password:r2.hash});
+        S.users=S.users.map(function(x){return x.id===u.id?Object.assign({},x,{password:r2.hash}):x;});
+        u=Object.assign({},u,{password:r2.hash});
+      }
+      S.user=Object.assign({},u,{role:'buyer'}); err.style.display='none';
+      document.getElementById('li-id').value=''; document.getElementById('li-pw').value='';
+      nav('shop'); showToast(u.name+'님, 환영합니다! 🍞'); return;
+    }
   }
   err.textContent='아이디 또는 비밀번호가 올바르지 않습니다.'; err.style.display='block';
 }
@@ -782,7 +810,8 @@ async function doRegister(){
   if(!document.getElementById('rg-terms2').checked){ err.textContent='개인정보 수집 및 이용에 동의해주세요.'; err.style.display='block'; return; }
   if(email==='admin' || S.users.find(function(u){ return u.email===email; })){ err.textContent='이미 사용 중인 이메일입니다.'; err.style.display='block'; return; }
   try{
-    await DB.addUser({id:Date.now().toString(),name:name,phone:phone,email:email,password:pw});
+    var hashed=await hashPw(pw);
+    await DB.addUser({id:Date.now().toString(),name:name,phone:phone,email:email,password:hashed});
     err.style.display='none';
     ['rg-name','rg-phone','rg-email','rg-pw','rg-pw2'].forEach(function(id){ document.getElementById(id).value=''; });
     document.getElementById('rg-terms1').checked=false;
@@ -1160,7 +1189,10 @@ function renderAdminMembers(){
       +'<div>📞 '+esc(u.phone||'-')+'</div>'
       +'<div>📦 주문 '+orderCnt+'건</div>'
       +'</div></div>'
-      +'<button onclick="doForceWithdraw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);flex-shrink:0;white-space:nowrap;">강제<br>탈퇴</button>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">'
+      +'<button onclick="doResetUserPw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#E3F2FD;color:#1565C0;border:1.5px solid rgba(21,101,192,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);white-space:nowrap;">🔑 PW<br>초기화</button>'
+      +'<button onclick="doForceWithdraw(\''+u.id+'\',\''+esc(u.name)+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer;font-family:var(--f);white-space:nowrap;">강제<br>탈퇴</button>'
+      +'</div>'
       +'</div></div>';
   }).join('');
 }
@@ -1171,6 +1203,16 @@ async function doForceWithdraw(id, name){
     await DB.delUser(id);
     renderAdminMembers();
     showToast(name+' 회원이 탈퇴 처리되었습니다.');
+  }catch(e){ showToast('오류: '+e.message,'error'); }
+}
+
+async function doResetUserPw(id, name){
+  if(!confirm('['+name+'] 회원의 비밀번호를 1234로 초기화하시겠습니까?')) return;
+  try{
+    var resetHash=await hashPw('1234');
+    await FB.upd('users', id, {password:resetHash});
+    S.users=S.users.map(function(u){return u.id===id?Object.assign({},u,{password:resetHash}):u;});
+    showToast(name+' 회원의 비밀번호가 1234로 초기화되었습니다. 🔑');
   }catch(e){ showToast('오류: '+e.message,'error'); }
 }
 
@@ -1231,14 +1273,16 @@ async function doChangeMyPw(){
   var nw2=document.getElementById('my-new-pw2').value;
   var err=document.getElementById('my-pw-err');
   if(!cur||!nw||!nw2){ err.textContent='모든 항목을 입력해주세요.'; err.style.display='block'; return; }
-  if(cur!==S.user.password){ err.textContent='현재 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
+  var r=await pwMatch(cur, S.user.password);
+  if(!r.ok){ err.textContent='현재 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
   if(nw!==nw2){ err.textContent='새 비밀번호가 일치하지 않습니다.'; err.style.display='block'; return; }
   if(nw.length<4){ err.textContent='비밀번호는 4자 이상 입력해주세요.'; err.style.display='block'; return; }
   err.style.display='none';
   try{
-    await FB.upd('users', S.user.id, {password:nw});
-    S.users=S.users.map(function(u){return u.id===S.user.id?Object.assign({},u,{password:nw}):u;});
-    S.user=Object.assign({},S.user,{password:nw});
+    var newHash=await hashPw(nw);
+    await FB.upd('users', S.user.id, {password:newHash});
+    S.users=S.users.map(function(u){return u.id===S.user.id?Object.assign({},u,{password:newHash}):u;});
+    S.user=Object.assign({},S.user,{password:newHash});
     ['my-cur-pw','my-new-pw','my-new-pw2'].forEach(function(id){ document.getElementById(id).value=''; });
     showToast('비밀번호가 변경되었습니다. 🔒');
   }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
@@ -1248,7 +1292,8 @@ async function doDeleteMyAccount(){
   var pw=document.getElementById('my-del-pw').value;
   var err=document.getElementById('my-del-err');
   if(!pw){ err.textContent='비밀번호를 입력해주세요.'; err.style.display='block'; return; }
-  if(pw!==S.user.password){ err.textContent='비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
+  var r=await pwMatch(pw, S.user.password);
+  if(!r.ok){ err.textContent='비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
   if(!confirm('정말 탈퇴하시겠습니까?\n모든 계정 정보가 삭제되며 복구할 수 없습니다.')) return;
   err.style.display='none';
   try{
@@ -1341,10 +1386,11 @@ async function doChangePw(){
   var cur=document.getElementById('cp-cur').value; var nw=document.getElementById('cp-new').value; var nw2=document.getElementById('cp-new2').value;
   var err=document.getElementById('cp-err');
   if(!cur||!nw||!nw2){ err.textContent='모든 항목을 입력해주세요.'; err.style.display='block'; return; }
-  if(cur!==S.adminPw){ err.textContent='현재 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
+  var r=await pwMatch(cur, S.adminPw);
+  if(!r.ok){ err.textContent='현재 비밀번호가 올바르지 않습니다.'; err.style.display='block'; return; }
   if(nw!==nw2){ err.textContent='새 비밀번호가 일치하지 않습니다.'; err.style.display='block'; return; }
   if(nw.length<4){ err.textContent='비밀번호는 4자 이상 입력해주세요.'; err.style.display='block'; return; }
-  S.adminPw=nw; err.style.display='none';
+  S.adminPw=await hashPw(nw); err.style.display='none';
   try{ await DB.saveConfig(); ['cp-cur','cp-new','cp-new2'].forEach(function(id){document.getElementById(id).value='';}); showToast('비밀번호가 변경되었습니다. 🔒'); }
   catch(e){ showToast('저장 실패','error'); }
 }
