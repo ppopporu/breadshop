@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>옷장 속의 작은 빵집 — 사용 안내</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--p:#C17F5A;--pd:#7A4A2C;--pl:#FDE8EF;--bg:#FFF8F0;--cd:#FFFFFF;--tx:#3D2314;--mu:#B09080;--bd:#EDD9C8;--re:#D94444;--or:#E8A020;}
+html,body{background:var(--bg);font-family:'Noto Sans KR',sans-serif;color:var(--tx);}
+body{padding-bottom:60px;}
+.hero{background:linear-gradient(150deg,#7A4A2C 0%,#C17F5A 60%,#E8A888 100%);padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.08);}
+.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.06);}
+.hero-icon{font-size:56px;margin-bottom:12px;display:block;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.hero h1{font-size:22px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px;}
+.hero p{font-size:14px;color:rgba(255,255,255,.85);font-weight:500;line-height:1.7;}
+.wrap{max-width:430px;margin:0 auto;padding:0 16px;}
+.sec-label{display:flex;align-items:center;gap:8px;margin:28px 0 14px;}
+.sec-label .badge{background:var(--p);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
+.sec-label h2{font-size:17px;font-weight:800;color:var(--pd);}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:20px;padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(193,127,90,.08);}
+.intro-card{background:linear-gradient(135deg,#FFF3EA,#FDE8EF);border:1.5px solid var(--bd);border-radius:20px;padding:20px 18px;margin-bottom:12px;display:flex;gap:14px;align-items:flex-start;}
+.intro-card .ic-icon{width:50px;height:50px;flex-shrink:0;background:var(--p);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.intro-card h3{font-size:14px;font-weight:800;color:var(--pd);margin-bottom:5px;}
+.intro-card p{font-size:13px;color:var(--mu);line-height:1.8;font-weight:500;}
+.step{background:var(--cd);border:1px solid var(--bd);border-radius:20px;padding:16px 18px;margin-bottom:10px;display:flex;gap:13px;align-items:flex-start;box-shadow:0 2px 10px rgba(193,127,90,.07);}
+.step-num{width:34px;height:34px;flex-shrink:0;background:var(--p);border-radius:11px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;}
+.step h3{font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;}
+.step p{font-size:12px;color:var(--mu);line-height:1.8;}
+.step .tag{display:inline-block;margin-top:7px;background:var(--pl);color:var(--p);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.admin-card{background:linear-gradient(135deg,#FFF8E7,#FFF3EA);border:1.5px solid #EDD9C8;border-radius:20px;padding:16px 18px;margin-bottom:10px;display:flex;gap:13px;align-items:flex-start;}
+.admin-card .a-icon{width:34px;height:34px;flex-shrink:0;background:var(--pd);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.admin-card h3{font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;}
+.admin-card p{font-size:12px;color:var(--mu);line-height:1.8;}
+.notice{border-radius:14px;padding:13px 15px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start;}
+.notice p{font-size:13px;font-weight:600;line-height:1.8;}
+.status-box{background:var(--bg);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px;color:var(--tx);line-height:2.3;}
+.feat-row{display:flex;align-items:center;gap:10px;padding:10px 0;}
+.feat-row+.feat-row{border-top:1px solid var(--bd);}
+.feat-row .fi{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.feat-row strong{font-size:13px;font-weight:800;color:var(--pd);display:block;margin-bottom:2px;}
+.feat-row span{font-size:12px;color:var(--mu);}
+.close-btn{display:block;width:calc(100% - 32px);margin:32px auto 0;padding:13px 0;border:none;border-radius:24px;background:var(--p);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.footer{text-align:center;padding:24px 16px 0;border-top:1px solid var(--bd);margin-top:32px;}
+.footer p{font-size:12px;color:var(--mu);line-height:2;}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.card,.step,.admin-card,.intro-card,.notice{animation:slideUp .3s ease both;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <span class="hero-icon">🍞</span>
+  <h1>옷장 속의 작은 빵집<br>사용 안내</h1>
+  <p>쉽고 간편하게 빵을 주문하는 방법을<br>안내해 드립니다</p>
+</div>
+<div class="wrap">
+
+  <div class="sec-label"><span class="badge">소개</span><h2>이 앱이 뭔가요?</h2></div>
+  <div class="intro-card">
+    <div class="ic-icon">🛒</div>
+    <div><h3>간편한 빵 주문 앱</h3><p>교회 내 빵집에서 판매하는 빵을 스마트폰으로 손쉽게 주문할 수 있는 앱입니다. 원하는 빵을 골라 수량을 선택하고, 계좌로 입금하면 주문 완료!</p></div>
+  </div>
+  <div class="intro-card">
+    <div class="ic-icon">📅</div>
+    <div><h3>주문 가능 요일</h3><p>빵 배송 주문은 <strong style="color:var(--pd);">매주 월 · 화 · 금 · 토요일</strong>에만 가능합니다.<br>계좌 입금 확인 후 주문이 최종 승인됩니다.</p></div>
+  </div>
+
+  <div class="sec-label"><span class="badge">STEP 1</span><h2>회원가입</h2></div>
+  <div class="step"><div class="step-num">1</div><div><h3>로그인 화면 하단 회원가입 선택</h3><p>처음 이용하시는 분은 로그인 화면 하단의 <strong>회원가입</strong> 버튼을 눌러주세요.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div><h3>정보 입력</h3><p>이름(닉네임), 전화번호, 이메일, 비밀번호를 입력합니다.<br>비밀번호는 <strong>4자리 이상</strong>으로 설정해 주세요.</p></div></div>
+  <div class="step"><div class="step-num">3</div><div><h3>약관 동의 후 가입 완료</h3><p>서비스 이용약관 + 개인정보 수집·이용 동의 체크 후 가입 완료!</p><span class="tag">✅ 전체 동의 버튼으로 한 번에 체크 가능</span></div></div>
+
+  <div class="sec-label"><span class="badge">STEP 2</span><h2>주문하기</h2></div>
+  <div class="step"><div class="step-num">1</div><div><h3>하단 🛒 주문하기 탭 선택</h3><p>로그인 후 하단 메뉴에서 <strong>주문하기</strong> 탭을 누르면 오늘의 빵 목록이 나타납니다.</p></div></div>
+  <div class="step"><div class="step-num">2</div><div><h3>빵 선택 및 수량 조정</h3><p><strong>+ / −</strong> 버튼으로 수량을 선택합니다. 여러 종류를 함께 담을 수 있어요.</p></div></div>
+  <div class="step"><div class="step-num">3</div><div><h3>장바구니 확인 후 주문</h3><p>하단 장바구니 버튼 → 상품 확인 → 픽업 장소 선택 → <strong>주문하기</strong> 클릭!</p></div></div>
+  <div class="step"><div class="step-num">4</div><div><h3>계좌 입금</h3><p>주문 완료 화면에 표시된 계좌번호로 합계 금액을 입금하면 끝!</p><span class="tag">💳 입금 확인 후 최종 승인됩니다</span></div></div>
+
+  <div class="sec-label"><span class="badge">STEP 3</span><h2>주문 내역 확인</h2></div>
+  <div class="step"><div class="step-num">📄</div><div><h3>주문 상태 확인</h3><p>하단 메뉴 <strong>주문내역</strong> 탭에서 내 주문 현황을 확인할 수 있습니다.</p><div class="status-box"><div>🕐 <strong>주문 중</strong> — 입금 대기 중</div><div>✅ <strong>주문 완료</strong> — 판매자 승인됨</div><div>🚚 <strong>배송 중</strong> — 배송 진행 중</div><div>🏁 <strong>배송완료</strong> — 수령 완료</div></div></div></div>
+  <div class="step"><div class="step-num">🗑️</div><div><h3>주문 취소</h3><p>판매자 <strong>승인 전</strong>에만 주문 내역에서 직접 취소할 수 있습니다.</p></div></div>
+  <div class="step"><div class="step-num">📅</div><div><h3>날짜로 조회</h3><p>주문 내역 상단의 날짜 필터로 원하는 기간의 주문을 조회할 수 있습니다.</p></div></div>
+
+  <div class="sec-label"><span class="badge">계정 관리</span><h2>내 계정 기능</h2></div>
+  <div class="card">
+    <div class="feat-row"><span class="fi">📋</span><div><strong>계정 정보 조회</strong><span>닉네임·이메일·전화번호 확인</span></div></div>
+    <div class="feat-row"><span class="fi">✏️</span><div><strong>닉네임 변경</strong><span>언제든지 변경 가능</span></div></div>
+    <div class="feat-row"><span class="fi">📞</span><div><strong>전화번호 변경</strong><span>새 번호로 업데이트</span></div></div>
+    <div class="feat-row"><span class="fi">🔒</span><div><strong>비밀번호 변경</strong><span>현재 비밀번호 확인 후 변경</span></div></div>
+    <div class="feat-row"><span class="fi">⚠️</span><div><strong style="color:var(--re);">회원 탈퇴</strong><span>탈퇴 후 복구 불가 — 신중하게!</span></div></div>
+  </div>
+
+  <div class="sec-label"><span class="badge" style="background:var(--pd);">판매자 전용</span><h2>판매자 기능</h2></div>
+  <div class="admin-card"><div class="a-icon">📋</div><div><h3>주문 관리</h3><p>들어온 주문을 승인하거나 취소할 수 있습니다. 날짜 필터(기본: 어제~오늘)로 빠르게 조회 가능합니다.</p></div></div>
+  <div class="admin-card"><div class="a-icon">🍞</div><div><h3>상품 관리</h3><p>빵 상품을 추가·수정·삭제할 수 있습니다. 사진, 상품명, 가격을 자유롭게 편집 가능합니다.</p></div></div>
+  <div class="admin-card"><div class="a-icon">👥</div><div><h3>회원 관리</h3><p>가입 회원을 조회하고 비밀번호 초기화(1234) 또는 강제 탈퇴 처리할 수 있습니다.</p></div></div>
+  <div class="admin-card"><div class="a-icon">⚙️</div><div><h3>설정</h3><p>입금 계좌 정보와 관리자 비밀번호를 변경할 수 있습니다.</p></div></div>
+
+  <div class="sec-label"><span class="badge" style="background:var(--or);">주의</span><h2>꼭 알아두세요</h2></div>
+  <div class="notice" style="background:#FFF8E7;border:1.5px solid #F5C842;"><span style="font-size:20px;flex-shrink:0;">📅</span><p style="color:#7A5C00;">빵 배송 주문은 <strong>매주 월·화·금·토요일</strong>에만 가능합니다.</p></div>
+  <div class="notice" style="background:#FFF3EA;border:1.5px solid var(--bd);"><span style="font-size:20px;flex-shrink:0;">💳</span><p style="color:#7A4A2C;"><strong>반드시 입금 후</strong> 주문이 확정됩니다. 입금 전에는 '주문 중' 상태로 표시됩니다.</p></div>
+  <div class="notice" style="background:#FFF5F5;border:1.5px solid rgba(217,68,68,.3);"><span style="font-size:20px;flex-shrink:0;">🗑️</span><p style="color:#7A1010;">주문 취소는 <strong>판매자 승인 전</strong>에만 가능합니다. 승인 후에는 판매자에게 직접 문의해 주세요.</p></div>
+
+  <button class="close-btn" onclick="window.close()">← 앱으로 돌아가기</button>
+  <div class="footer"><p>🍞 옷장 속의 작은 빵집<br>궁금한 점은 담당자에게 문의해 주세요 😊</p></div>
+</div>
+</body>
+</html>
