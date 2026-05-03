@@ -481,6 +481,35 @@ service cloud.firestore {
     <button id="terms-agree-btn" onclick="agreeFromModal()" class="btn-p">동의하고 닫기</button>
    </div>
   </div>
+ </div> <!-- 상품 수정 모달 -->
+ <div id="edit-product-modal" onclick="closeEditProductModal()" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:600;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:var(--cd);border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:90vh;display:flex;flex-direction:column;">
+   <div style="padding:20px 22px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
+    <h3 style="font-size:16px;font-weight:800;color:var(--pd);">✏️ 상품 수정</h3>
+    <button onclick="closeEditProductModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--mu);line-height:1;padding:0;">✕</button>
+   </div>
+   <div style="overflow-y:auto;padding:18px 22px 10px;">
+    <!-- 사진 -->
+    <p style="font-size:13px;font-weight:700;color:var(--mu);margin-bottom:8px;">상품 사진</p>
+    <div id="ep-photo-wrap" onclick="triggerEditFileInput()" style="width:100%;height:160px;border:2px dashed var(--bd);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin-bottom:16px;position:relative;background:var(--bg);">
+     <img id="ep-preview" style="display:none;width:100%;height:100%;object-fit:cover;">
+     <div id="ep-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;">
+      <span style="font-size:32px;">📷</span>
+      <span style="font-size:13px;color:var(--mu);">사진을 탭하여 변경</span>
+     </div>
+     <button id="ep-change-btn" onclick="clearEditPhoto(event)" style="display:none;position:absolute;top:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:20px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:var(--f);">✕ 제거</button>
+    </div>
+    <input type="file" id="ep-photo-file" accept="image/*" style="display:none;" onchange="handleEditPhotoSelect(event)">
+    <!-- 상품명 -->
+    <div class="fld"><label>상품명</label><input id="ep-name" placeholder="상품명 입력"></div>
+    <!-- 가격 -->
+    <div class="fld"><label>가격 (원)</label><input id="ep-price" type="number" placeholder="예: 3000"></div>
+    <p id="ep-err" class="err" style="display:none;"></p>
+   </div>
+   <div style="padding:14px 22px;padding-bottom:calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--bd);flex-shrink:0;">
+    <button onclick="doEditProduct()" class="btn-p">💾 수정 저장</button>
+   </div>
+  </div>
  </div>
 </div><!-- /app -->
 
@@ -540,6 +569,7 @@ var DB = {
     if(r[3]){ S.adminPw=r[3].adminPw||'admin'; S.bankInfo=r[3].bankInfo||S.bankInfo; }
   },
   addProduct: async function(p){ await FB.setDoc('products',p.id,p); S.products=S.products.concat([p]); },
+  updProduct: async function(id,fields){ await FB.upd('products',id,fields); S.products=S.products.map(function(p){return p.id===id?Object.assign({},p,fields):p;}); },
   delProduct: async function(id){ await FB.del('products',id); S.products=S.products.filter(function(p){return p.id!==id;}); },
   addUser:    async function(u){ await FB.setDoc('users',u.id,u); S.users=S.users.concat([u]); },
   addOrder:   async function(o){ await FB.setDoc('orders',o.id,o); S.orders=S.orders.concat([o]); },
@@ -1082,7 +1112,7 @@ function renderBuyerOrders(){
     var sc=o.status==='주문중'?'s-w':o.status==='주문완료'?'s-g':'s-r';
     var sl=o.status==='주문중'?'🕐 주문 중':o.status==='주문완료'?'✅ 주문 완료':'❌ 취소됨';
     var rows=o.items.map(function(it){return '<div class="orow"><span>'+esc(it.name)+' × '+it.qty+'</span><span class="oamt">'+(it.price*it.qty).toLocaleString()+'원</span></div>';}).join('');
-    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p><p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료되며, 입금 시 보내는 분 성함은 닉네임으로 기재해 주시기 바랍니다. </p></div>':'';
+    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p><p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
     var cancelBtn=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="doBuyerCancel(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">🗑️ 주문 취소</button></div>':'';
     return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'+bank+cbox+cancelBtn+deliveryTrackHtml(o)+'</div>';
@@ -1316,7 +1346,10 @@ function renderProductList(){
     return '<div class="pi-item"><div class="pi-th">'+img+'</div>'
       +'<div style="flex:1;"><p style="font-weight:700;font-size:15px;color:var(--tx);margin-bottom:4px;">'+esc(p.name)+'</p>'
       +'<p style="font-weight:800;font-size:15px;color:var(--p);">'+p.price.toLocaleString()+'원</p></div>'
-      +'<button onclick="doDeleteProduct(\''+p.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:9px 16px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);flex-shrink:0;">삭제</button></div>';
+      +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">'
+      +'<button onclick="openEditProductModal(\''+p.id+'\')" style="background:var(--pl);color:var(--p);border:1.5px solid rgba(193,127,90,.35);border-radius:12px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">수정</button>'
+      +'<button onclick="doDeleteProduct(\''+p.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);border-radius:12px;padding:8px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--f);">삭제</button>'
+      +'</div></div>';
   }).join('');
 }
 
@@ -1378,6 +1411,78 @@ async function doDeleteProduct(id){
   if(!confirm('이 상품을 삭제하시겠습니까?')) return;
   try{ await DB.delProduct(id); renderProductList(); showToast('상품이 삭제되었습니다.'); }
   catch(e){ showToast('삭제 실패','error'); }
+}
+
+/* ─── 상품 수정 모달 ─── */
+var _editProductId=null;
+var _editPendingPhoto=null; // null=변경없음, ''=제거, 'data:...'=새사진
+
+function openEditProductModal(id){
+  var p=S.products.find(function(x){return x.id===id;});
+  if(!p) return;
+  _editProductId=id; _editPendingPhoto=null;
+  document.getElementById('ep-name').value=p.name;
+  document.getElementById('ep-price').value=p.price;
+  document.getElementById('ep-err').style.display='none';
+  // 사진 미리보기
+  var prev=document.getElementById('ep-preview');
+  var ph=document.getElementById('ep-placeholder');
+  var cb=document.getElementById('ep-change-btn');
+  if(p.photo){ prev.src=p.photo; prev.style.display='block'; ph.style.display='none'; cb.style.display='block'; }
+  else { prev.style.display='none'; prev.src=''; ph.style.display='flex'; cb.style.display='none'; }
+  try{ document.getElementById('ep-photo-file').value=''; }catch(ex){}
+  document.getElementById('edit-product-modal').style.display='flex';
+}
+function closeEditProductModal(){
+  document.getElementById('edit-product-modal').style.display='none';
+  _editProductId=null; _editPendingPhoto=null;
+}
+function triggerEditFileInput(){ document.getElementById('ep-photo-file').click(); }
+function handleEditPhotoSelect(e){
+  var file=e.target.files[0]; if(!file) return;
+  if(!file.type.startsWith('image/')){ showToast('이미지 파일만 첨부 가능합니다.','warn'); return; }
+  if(file.size>4*1024*1024){ showToast('4MB 이하 이미지만 첨부 가능합니다.','warn'); return; }
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){
+      var MAX=800; var w=img.width; var h=img.height;
+      if(w>MAX||h>MAX){ if(w>h){h=Math.round(h*(MAX/w));w=MAX;}else{w=Math.round(w*(MAX/h));h=MAX;} }
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      _editPendingPhoto=c.toDataURL('image/jpeg',0.82);
+      document.getElementById('ep-preview').src=_editPendingPhoto;
+      document.getElementById('ep-preview').style.display='block';
+      document.getElementById('ep-placeholder').style.display='none';
+      document.getElementById('ep-change-btn').style.display='block';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearEditPhoto(e){
+  e.stopPropagation(); _editPendingPhoto='';
+  document.getElementById('ep-preview').style.display='none'; document.getElementById('ep-preview').src='';
+  document.getElementById('ep-placeholder').style.display='flex';
+  document.getElementById('ep-change-btn').style.display='none';
+  try{ document.getElementById('ep-photo-file').value=''; }catch(ex){}
+}
+async function doEditProduct(){
+  var name=document.getElementById('ep-name').value.trim();
+  var price=parseInt(document.getElementById('ep-price').value)||0;
+  var err=document.getElementById('ep-err');
+  if(!name){ err.textContent='상품명을 입력해주세요.'; err.style.display='block'; return; }
+  if(!price||price<=0){ err.textContent='올바른 가격을 입력해주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  var p=S.products.find(function(x){return x.id===_editProductId;});
+  if(!p) return;
+  var updPhoto=_editPendingPhoto===null?p.photo:_editPendingPhoto; // null=기존유지, ''=제거, data=새사진
+  var updated=Object.assign({},p,{name:name,price:price,photo:updPhoto});
+  try{
+    await DB.updProduct(_editProductId,{name:name,price:price,photo:updPhoto});
+    S.products=S.products.map(function(x){return x.id===_editProductId?updated:x;});
+    closeEditProductModal(); renderProductList(); showToast('상품이 수정되었습니다. ✏️');
+  }catch(e){ err.textContent='저장 실패: '+e.message; err.style.display='block'; }
 }
 
 /* ─────────────────────────────────────────────
