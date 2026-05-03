@@ -208,7 +208,7 @@ service cloud.firestore {
     <p class="sub-txt">The Little Bakery in the Wardrobe</p>
    </div>
    <div class="card" style="padding:26px 22px;">
-    <div class="fld"><label>이메일 / 아이디</label><input id="li-id" type="text" placeholder="이메일 주소 입력" autocomplete="username"></div>
+    <div class="fld"><label>이메일 / 아이디</label><input id="li-id" type="text" placeholder="이메일 또는 admin" autocomplete="username"></div>
     <div class="fld"><label>비밀번호</label><input id="li-pw" type="password" placeholder="비밀번호 입력" autocomplete="current-password"></div>
     <p id="li-err" class="err" style="display:none;"></p>
     <button onclick="doLogin()" class="btn-p" style="margin-bottom:10px;">로그인</button>
@@ -269,10 +269,14 @@ service cloud.firestore {
    <div style="height:220px;"></div>
   </div>
 
-  <!-- ════════ MY ORDERS ════════ -->
   <div id="p-orders" class="pg">
    <h2 class="ph2">주문 내역</h2>
    <p class="ps">나의 주문 및 배송 현황을 확인해요</p>
+   <!-- 공지 -->
+   <div style="background:#FFF8E7;border:1.5px solid #F5C842;border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;">
+    <span style="font-size:20px;flex-shrink:0;">📢</span>
+    <p style="font-size:13px;color:#7A5C00;font-weight:600;line-height:1.7;margin:0;">빵 배송 주문은 <strong>매주 월요일, 화요일, 금요일, 토요일</strong>에만 가능하며, 계좌 입금이 확인된 후 주문이 최종 승인됩니다.</p>
+   </div>
    <!-- 날짜 필터 -->
    <div class="card" style="padding:14px 16px;margin-bottom:14px;">
     <p class="sec-title" style="margin-bottom:10px;">📅 날짜로 조회</p>
@@ -306,7 +310,7 @@ service cloud.firestore {
    <div class="card">
     <p class="sec-title">🗺️ 지도에서 찾기</p>
     <a href="https://map.kakao.com/link/search/안산시 단원구 선부동 옷장속의 작은 빵집" target="_blank" rel="noopener" class="map-a" style="background:#FEE500;color:#3C1E1E;"><span style="font-size:18px;">🟡</span><span>카카오맵으로 보기</span><span style="margin-left:auto;">→</span></a>
-    <a href="https://map.naver.com/v5/search/안산시 단원구 선부동 옷장속의 작은 빵집" target="_blank" rel="noopener" class="map-a" style="background:#03C75A;color:#fff;"><span style="font-size:18px;">🟢</span><span>네이버맵으로 보기</span><span style="margin-left:auto;">→</span></a>
+    <a href="https://map.naver.com/v5/search/경기도 안산시 단원구 선부동 옷장속의작은빵집" target="_blank" rel="noopener" class="map-a" style="background:#03C75A;color:#fff;"><span style="font-size:18px;">🟢</span><span>네이버맵으로 보기</span><span style="margin-left:auto;">→</span></a>
    </div>
    <div class="card"><p class="sec-title">💳 계좌 정보</p><div id="info-bank" style="background:var(--bg);border-radius:14px;padding:14px 16px;"></div></div>
   </div>
