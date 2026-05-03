@@ -214,6 +214,120 @@ service cloud.firestore {
     <button onclick="doLogin()" class="btn-p" style="margin-bottom:10px;">로그인</button>
     <button onclick="nav('register')" class="btn-s">회원가입</button>
    </div>
+   <div style="text-align:center;margin-top:16px;">
+    <button onclick="nav('guide')" style="background:none;border:none;color:var(--mu);font-size:13px;font-weight:600;font-family:var(--f);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">📖 앱 소개 및 사용법 보기</button>
+   </div>
+
+  <!-- ════════ GUIDE ════════ -->
+  <div id="p-guide" class="pg" style="padding:0 0 40px;">
+   <!-- 헤더 -->
+   <div style="background:linear-gradient(150deg,#7A4A2C 0%,#C17F5A 60%,#E8A888 100%);padding:36px 20px 32px;text-align:center;position:relative;overflow:hidden;margin-bottom:20px;">
+    <div style="position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.07);"></div>
+    <div style="position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.05);"></div>
+    <button onclick="nav('login')" style="position:absolute;top:16px;left:16px;background:rgba(255,255,255,.2);border:none;color:#fff;font-size:13px;font-weight:700;font-family:var(--f);border-radius:20px;padding:6px 14px;cursor:pointer;">← 뒤로</button>
+    <div style="font-size:48px;margin-bottom:10px;">🍞</div>
+    <h1 style="font-size:19px;font-weight:900;color:#fff;margin-bottom:6px;">옷장 속의 작은 빵집</h1>
+    <p style="font-size:13px;color:rgba(255,255,255,.85);font-weight:500;">앱 소개 및 사용 안내</p>
+   </div>
+
+   <div style="padding:0 16px;">
+
+    <!-- 앱 소개 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">📌 소개</p>
+    <div class="card" style="margin-bottom:14px;display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#FFF3EA,#FDE8EF);">
+     <div style="width:48px;height:48px;flex-shrink:0;background:var(--p);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;">🛒</div>
+     <div>
+      <p style="font-size:14px;font-weight:800;color:var(--pd);margin-bottom:5px;">간편한 빵 주문 앱</p>
+      <p style="font-size:13px;color:var(--mu);line-height:1.75;">교회 내 빵집에서 판매하는 빵을 스마트폰으로 손쉽게 주문할 수 있는 앱입니다. 원하는 빵을 골라 수량을 선택하고 계좌로 입금하면 완료!</p>
+     </div>
+    </div>
+    <div style="background:#FFF8E7;border:1.5px solid #F5C842;border-radius:14px;padding:13px 15px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start;">
+     <span style="font-size:18px;flex-shrink:0;">📅</span>
+     <p style="font-size:13px;color:#7A5C00;font-weight:600;line-height:1.75;">빵 배송 주문은 <strong>매주 월·화·금·토요일</strong>에만 가능하며, 계좌 입금 확인 후 최종 승인됩니다.</p>
+    </div>
+
+    <!-- STEP 1 회원가입 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">STEP 1 · 회원가입</p>
+    <div class="card" style="margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">1</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">로그인 화면 하단 회원가입 선택</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">처음 이용하시는 분은 아래 <strong>회원가입</strong> 버튼을 눌러주세요.</p></div>
+    </div>
+    <div class="card" style="margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">2</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">이름·전화번호·이메일·비밀번호 입력</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">비밀번호는 <strong>4자리 이상</strong>으로 설정해 주세요.</p></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">3</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">약관 동의 후 가입 완료</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">이용약관 + 개인정보 수집 동의 체크 → 가입 완료!<br><strong>전체 동의</strong> 버튼으로 한 번에 체크 가능합니다.</p></div>
+    </div>
+
+    <!-- STEP 2 주문하기 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">STEP 2 · 주문하기</p>
+    <div class="card" style="margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">1</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">하단 🛒 주문하기 탭 선택</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">로그인 후 하단 메뉴에서 주문하기 탭을 누르면 오늘의 빵 목록이 나타납니다.</p></div>
+    </div>
+    <div class="card" style="margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">2</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">빵 선택 및 수량 조정</p><p style="font-size:12px;color:var(--mu);line-height:1.75;"><strong>+/−</strong> 버튼으로 수량을 선택하세요. 여러 종류를 함께 담을 수 있어요.</p></div>
+    </div>
+    <div class="card" style="margin-bottom:6px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">3</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">장바구니 확인 후 주문</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">하단 장바구니 버튼 → 상품 확인 → 픽업 장소 선택 → <strong>주문하기</strong> 클릭!</p></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+     <div style="width:32px;height:32px;flex-shrink:0;background:var(--p);border-radius:10px;color:#fff;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;">4</div>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">계좌 입금</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">주문 완료 화면에 표시된 계좌번호로 합계 금액을 입금하면 끝!</p></div>
+    </div>
+
+    <!-- STEP 3 주문 확인 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">STEP 3 · 주문 내역 확인</p>
+    <div class="card" style="margin-bottom:6px;">
+     <p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:6px;">📄 주문 상태</p>
+     <p style="font-size:12px;color:var(--mu);line-height:1.75;">하단 <strong>주문내역</strong> 탭에서 내 주문 현황을 확인할 수 있습니다.</p>
+     <div style="background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--tx);line-height:2.2;">
+      <div>🕐 <strong>주문 중</strong> — 입금 대기 중</div>
+      <div>✅ <strong>주문 완료</strong> — 판매자 승인됨</div>
+      <div>🚚 <strong>배송 중</strong> — 배송 진행 중</div>
+      <div>🏁 <strong>배송완료</strong> — 수령 완료</div>
+     </div>
+    </div>
+    <div class="card" style="margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+     <span style="font-size:22px;">🗑️</span>
+     <div><p style="font-size:13px;font-weight:800;color:var(--pd);margin-bottom:4px;">주문 취소</p><p style="font-size:12px;color:var(--mu);line-height:1.75;">판매자 <strong>승인 전</strong>에만 주문 내역에서 직접 취소할 수 있습니다.</p></div>
+    </div>
+
+    <!-- 내 계정 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">👤 내 계정 기능</p>
+    <div class="card" style="margin-bottom:20px;">
+     <div style="display:flex;flex-direction:column;gap:11px;font-size:13px;">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">✏️</span><div><strong style="color:var(--pd);">닉네임 변경</strong><p style="font-size:12px;color:var(--mu);">언제든지 변경 가능</p></div></div>
+      <div style="height:1px;background:var(--bd);"></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">📞</span><div><strong style="color:var(--pd);">전화번호 변경</strong><p style="font-size:12px;color:var(--mu);">새 번호로 업데이트</p></div></div>
+      <div style="height:1px;background:var(--bd);"></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔒</span><div><strong style="color:var(--pd);">비밀번호 변경</strong><p style="font-size:12px;color:var(--mu);">현재 비밀번호 확인 후 변경</p></div></div>
+      <div style="height:1px;background:var(--bd);"></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">⚠️</span><div><strong style="color:var(--re);">회원 탈퇴</strong><p style="font-size:12px;color:var(--mu);">탈퇴 후 복구 불가 — 신중하게!</p></div></div>
+     </div>
+    </div>
+
+    <!-- 주의사항 -->
+    <p style="font-size:12px;font-weight:800;color:var(--p);letter-spacing:.5px;margin-bottom:10px;">⚠️ 꼭 알아두세요</p>
+    <div style="background:#FFF8E7;border:1.5px solid #F5C842;border-radius:14px;padding:13px 15px;margin-bottom:10px;display:flex;gap:10px;">
+     <span style="font-size:18px;flex-shrink:0;">📅</span>
+     <p style="font-size:13px;color:#7A5C00;font-weight:600;line-height:1.75;">주문 가능 요일: <strong>월·화·금·토요일</strong>만 가능합니다.</p>
+    </div>
+    <div style="background:#FFF3EA;border:1.5px solid var(--bd);border-radius:14px;padding:13px 15px;margin-bottom:10px;display:flex;gap:10px;">
+     <span style="font-size:18px;flex-shrink:0;">💳</span>
+     <p style="font-size:13px;color:#7A4A2C;font-weight:600;line-height:1.75;"><strong>반드시 입금 후</strong> 주문이 확정됩니다. 입금 전에는 '주문 중' 상태입니다.</p>
+    </div>
+    <div style="background:#FFF5F5;border:1.5px solid rgba(217,68,68,.3);border-radius:14px;padding:13px 15px;margin-bottom:24px;display:flex;gap:10px;">
+     <span style="font-size:18px;flex-shrink:0;">🗑️</span>
+     <p style="font-size:13px;color:#7A1010;font-weight:600;line-height:1.75;">주문 취소는 <strong>판매자 승인 전</strong>에만 가능합니다.</p>
+    </div>
+
+    <button onclick="nav('login')" class="btn-p">← 로그인 화면으로 돌아가기</button>
+   </div>
   </div>
 
   <!-- ════════ REGISTER ════════ -->
@@ -750,7 +864,7 @@ function renderLogos(){
 function nav(view){
   S.view=view;
   document.querySelectorAll('.pg,.pg-full').forEach(function(p){ p.classList.remove('on'); });
-  var map={setup:'p-setup',splash:'p-splash',login:'p-login',register:'p-register',shop:'p-shop',orders:'p-orders',info:'p-info','admin-orders':'p-admin-orders','admin-products':'p-admin-products','admin-settings':'p-admin-settings','admin-members':'p-admin-members','my-account':'p-my-account'};
+  var map={setup:'p-setup',splash:'p-splash',login:'p-login',register:'p-register',guide:'p-guide',shop:'p-shop',orders:'p-orders',info:'p-info','admin-orders':'p-admin-orders','admin-products':'p-admin-products','admin-settings':'p-admin-settings','admin-members':'p-admin-members','my-account':'p-my-account'};
   var el=document.getElementById(map[view]); if(el) el.classList.add('on');
   var navEl=document.getElementById('nav'); var cartFt=document.getElementById('cart-ft');
   var hideNav=['setup','splash','login','register'];
