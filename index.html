@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#C17F5A">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>옷장 속 작은 빵집</title>
+<title>옷장 속의 작은 빵집</title>
 
 <!--
   ★ Firebase Compat SDK v9.22.2 — gstatic.com 공식 CDN
@@ -22,6 +22,7 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
   --p:#C17F5A;--pd:#7A4A2C;--pk:#F4A0B5;--pl:#FDE8EF;
   --bg:#FFF8F0;--cd:#FFFFFF;--tx:#3D2314;--sb:#7A5A4A;--mu:#B09080;
   --bd:#EDD9C8;--gn:#4CAF82;--or:#E8A020;--re:#D94444;--bl:#3B82F6;
+  --pt:#7C3AED;--ptl:#EDE9FE; /* 포인트 컬러 */
 }
 #app{max-width:430px;min-height:100vh;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);}
 #screen{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom);}
@@ -152,7 +153,7 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
   <div id="p-setup" class="pg" style="padding-top:24px;">
    <div style="text-align:center;margin-bottom:20px;">
     <div id="setup-logo" style="display:flex;justify-content:center;"></div>
-    <div class="store-name-big" style="text-align:center;">옷장 속 작은 빵집</div>
+    <div class="store-name-big" style="text-align:center;">옷장 속의 작은 빵집</div>
     <div style="display:inline-block;" class="fb-badge">🔥 Firebase Firestore 무료 영구 DB</div>
     <p style="font-size:13px;color:var(--mu);margin-top:8px;">아래 4단계를 따라 무료 DB를 연결하세요<br>신용카드 없이 영구 무료 (Spark 플랜)</p>
    </div>
@@ -191,7 +192,7 @@ service cloud.firestore {
   <!-- ════════ SPLASH ════════ -->
   <div id="p-splash" class="pg-full" style="background:linear-gradient(150deg,#FFF3E0,#FDE8EF);padding:40px 24px;">
    <div id="splash-logo"></div>
-   <h1 class="store-name-big" style="text-align:center;">옷장 속 작은 빵집</h1>
+   <h1 class="store-name-big" style="text-align:center;">옷장 속의 작은 빵집</h1>
    <p class="sub-txt" style="margin-top:4px;">따뜻한 빵을 배달해 드려요 🍞</p>
    <div style="margin-top:36px;display:flex;gap:8px;">
     <div style="width:9px;height:9px;border-radius:50%;background:var(--pk);animation:dot 1.2s 0s infinite;"></div>
@@ -213,9 +214,6 @@ service cloud.firestore {
     <p id="li-err" class="err" style="display:none;"></p>
     <button onclick="doLogin()" class="btn-p" style="margin-bottom:10px;">로그인</button>
     <button onclick="nav('register')" class="btn-s">회원가입</button>
-   </div>
-   <div style="text-align:center;margin-top:18px;">
-    <a href="guide.html" target="_blank" style="color:var(--mu);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;">📖 앱 소개 및 사용법 보기</a>
    </div>
   </div>
 
@@ -299,11 +297,11 @@ service cloud.firestore {
 
   <!-- ════════ STORE INFO ════════ -->
   <div id="p-info" class="pg">
-   <h2 class="ph2">매장 정보</h2><p class="ps">옷장 속 작은 빵집을 찾아오세요</p>
+   <h2 class="ph2">매장 정보</h2><p class="ps">옷장 속의 작은 빵집을 찾아오세요</p>
    <div class="card">
     <div style="text-align:center;margin-bottom:18px;">
      <div id="info-logo" style="display:flex;justify-content:center;"></div>
-     <div class="store-name-big" style="font-size:19px;text-align:center;">옷장 속 작은 빵집</div>
+     <div class="store-name-big" style="font-size:19px;text-align:center;">옷장 속의 작은 빵집</div>
     </div>
     <div style="background:var(--bg);border-radius:14px;padding:14px 16px;">
      <div class="info-row"><span style="font-size:18px;margin-top:1px;">📍</span><div><p style="font-size:12px;color:var(--mu);font-weight:600;margin-bottom:3px;">주소</p><p style="font-size:14px;font-weight:700;color:var(--tx);">경기도 안산시 단원구 선부동</p></div></div>
@@ -372,6 +370,37 @@ service cloud.firestore {
   <div id="p-admin-members" class="pg">
    <h2 class="ph2">👥 회원 관리</h2>
    <p class="ps">가입 회원을 조회하고 관리해요</p>
+   <!-- 포인트 이관 -->
+   <div class="card" style="background:var(--ptl);border:1.5px solid rgba(124,58,237,.2);margin-bottom:14px;">
+    <p class="sec-title" style="color:var(--pt);">💜 포인트 이관</p>
+    <div class="fld"><label style="color:var(--pt);">출발 회원 (이관할 회원)</label>
+     <select id="pt-from" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:14px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;"></select>
+    </div>
+    <div class="fld"><label style="color:var(--pt);">도착 회원 (받을 회원)</label>
+     <select id="pt-to" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:14px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;"></select>
+    </div>
+    <div class="fld"><label style="color:var(--pt);">이관 포인트</label>
+     <input id="pt-amount" type="number" min="1" step="100" placeholder="이관할 포인트 입력" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:15px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;">
+    </div>
+    <p id="pt-tr-err" class="err" style="display:none;"></p>
+    <button onclick="doTransferPoints()" style="display:block;width:100%;padding:12px 0;border:none;border-radius:24px;background:var(--pt);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--f);margin-bottom:12px;">💜 포인트 이관 실행</button>
+    <!-- 자동이관 설정 -->
+    <div style="border-top:1px solid rgba(124,58,237,.2);padding-top:12px;">
+     <p style="font-size:13px;font-weight:800;color:var(--pt);margin-bottom:10px;">⚙️ 자동이관 설정</p>
+     <p style="font-size:12px;color:var(--mu);margin-bottom:10px;">설정하면 해당 회원이 포인트를 적립할 때 자동으로 지정 회원에게 이관됩니다.</p>
+     <div class="fld"><label style="color:var(--pt);">자동이관 출발 회원</label>
+      <select id="auto-from" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:14px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;"></select>
+     </div>
+     <div class="fld"><label style="color:var(--pt);">자동이관 도착 회원</label>
+      <select id="auto-to" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:14px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;"></select>
+     </div>
+     <div style="display:flex;gap:8px;">
+      <button onclick="doSetAutoTransfer()" style="flex:1;padding:10px 0;border:none;border-radius:20px;background:var(--pt);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f);">✅ 설정 저장</button>
+      <button onclick="doClearAutoTransfer()" style="flex:1;padding:10px 0;border:none;border-radius:20px;background:#E9E6FF;color:var(--pt);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f);">🗑️ 설정 초기화</button>
+     </div>
+     <div id="auto-transfer-info" style="margin-top:10px;font-size:12px;color:var(--pt);font-weight:600;text-align:center;display:none;"></div>
+    </div>
+   </div>
    <!-- 검색 -->
    <div class="card" style="padding:14px 16px;margin-bottom:14px;">
     <p class="sec-title" style="margin-bottom:10px;">🔍 회원 검색</p>
@@ -388,6 +417,17 @@ service cloud.firestore {
   <div id="p-my-account" class="pg">
    <h2 class="ph2">👤 내 계정</h2>
    <p class="ps">계정 정보를 조회하고 관리해요</p>
+   <!-- 포인트 잔액 -->
+   <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,var(--ptl),#F5F3FF);border:1.5px solid rgba(124,58,237,.2);">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+     <div>
+      <p style="font-size:13px;font-weight:700;color:var(--pt);margin-bottom:4px;">💜 내 포인트 잔액</p>
+      <p id="my-point-balance" style="font-size:28px;font-weight:900;color:var(--pt);"></p>
+      <p style="font-size:12px;color:var(--mu);margin-top:4px;">구매금액의 5% 적립 · 10,000P 이상 사용 가능</p>
+     </div>
+     <span style="font-size:40px;">🪙</span>
+    </div>
+   </div>
    <!-- 계정 정보 -->
    <div class="card" style="margin-bottom:14px;">
     <p class="sec-title">📋 계정 정보</p>
@@ -457,7 +497,29 @@ service cloud.firestore {
  <div id="cart-ft">
   <p style="font-size:13px;font-weight:700;color:var(--sb);margin-bottom:10px;">📍 수령 장소 선택</p>
   <div id="dlv-btns" style="display:flex;gap:8px;margin-bottom:14px;"></div>
+  <!-- 포인트 사용 -->
+  <div id="point-use-wrap" style="display:none;background:var(--ptl);border-radius:14px;padding:12px 14px;margin-bottom:12px;">
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span style="font-size:13px;font-weight:800;color:var(--pt);">💜 포인트 사용</span>
+    <span id="pt-avail" style="font-size:12px;color:var(--pt);font-weight:600;"></span>
+   </div>
+   <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+    <input id="pt-input" type="number" min="0" step="1000" placeholder="사용할 포인트" oninput="onPointInput()"
+     style="flex:1;border:1.5px solid rgba(124,58,237,.3);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#fff;color:var(--tx);outline:none;">
+    <button onclick="applyMaxPoint()" style="background:var(--pt);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);flex-shrink:0;">전액</button>
+    <button onclick="clearPoint()" style="background:#E9E6FF;color:var(--pt);border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);flex-shrink:0;">취소</button>
+   </div>
+   <p id="pt-msg" style="font-size:12px;color:var(--pt);font-weight:600;display:none;"></p>
+  </div>
   <div class="total-row"><span class="total-lbl">총 금액</span><span class="total-amt" id="cart-total">0원</span></div>
+  <div id="point-disc-row" style="display:none;justify-content:space-between;align-items:center;margin-top:4px;margin-bottom:4px;">
+   <span style="font-size:13px;color:var(--pt);font-weight:600;">💜 포인트 차감</span>
+   <span id="point-disc-amt" style="font-size:13px;color:var(--pt);font-weight:700;"></span>
+  </div>
+  <div id="pay-total-row" style="display:none;justify-content:space-between;align-items:center;margin-bottom:8px;">
+   <span style="font-size:14px;color:var(--pd);font-weight:800;">실 결제금액</span>
+   <span id="pay-total-amt" style="font-size:15px;color:var(--pd);font-weight:900;"></span>
+  </div>
   <button onclick="doOrder()" class="btn-dark">주문하기 🛒</button>
  </div>
 
@@ -561,7 +623,9 @@ var S = {
   cart:{}, delivery:'부곡이웃교회',
   cancelTarget:null, pendingPhoto:null,
   buyerDateFrom:'', buyerDateTo:'',
-  adminDateFrom:'', adminDateTo:''
+  adminDateFrom:'', adminDateTo:'',
+  pointUseAmount:0,          // 이번 주문에서 사용할 포인트
+  autoTransfer:{}            // { fromUserId: toUserId } 자동이관 설정
 };
 
 function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -573,16 +637,47 @@ var DB = {
   load: async function(){
     var r = await Promise.all([FB.getAll('products'), FB.getAll('orders'), FB.getAll('users'), FB.getDoc('config','main')]);
     S.products=r[0]; S.orders=r[1]; S.users=r[2];
-    if(r[3]){ S.adminPw=r[3].adminPw||'admin'; S.bankInfo=r[3].bankInfo||S.bankInfo; }
+    if(r[3]){
+      S.adminPw=r[3].adminPw||'admin';
+      S.bankInfo=r[3].bankInfo||S.bankInfo;
+      S.autoTransfer=r[3].autoTransfer||{};
+    }
   },
   addProduct: async function(p){ await FB.setDoc('products',p.id,p); S.products=S.products.concat([p]); },
   updProduct: async function(id,fields){ await FB.upd('products',id,fields); S.products=S.products.map(function(p){return p.id===id?Object.assign({},p,fields):p;}); },
   delProduct: async function(id){ await FB.del('products',id); S.products=S.products.filter(function(p){return p.id!==id;}); },
   addUser:    async function(u){ await FB.setDoc('users',u.id,u); S.users=S.users.concat([u]); },
+  updUser:    async function(id,fields){ await FB.upd('users',id,fields); S.users=S.users.map(function(u){return u.id===id?Object.assign({},u,fields):u;}); if(S.user&&S.user.id===id) S.user=Object.assign({},S.user,fields); },
   addOrder:   async function(o){ await FB.setDoc('orders',o.id,o); S.orders=S.orders.concat([o]); },
   delUser:    async function(id){ await FB.del('users',id); S.users=S.users.filter(function(u){return u.id!==id;}); },
   updOrder:   async function(id,data){ await FB.upd('orders',id,data); S.orders=S.orders.map(function(o){return o.id===id?Object.assign({},o,data):o;}); },
-  saveConfig: async function(){ return FB.setDoc('config','main',{adminPw:S.adminPw, bankInfo:S.bankInfo}); }
+  saveConfig: async function(){ return FB.setDoc('config','main',{adminPw:S.adminPw, bankInfo:S.bankInfo, autoTransfer:S.autoTransfer}); },
+  /* 포인트 적립: 실구매금액(포인트차감 후)의 5% */
+  givePoints: async function(userId, earnedPoints){
+    var u=S.users.find(function(x){return x.id===userId;}); if(!u) return;
+    var cur=u.points||0;
+    var targetId=S.autoTransfer[userId]; // 자동이관 대상
+    if(targetId){
+      var tu=S.users.find(function(x){return x.id===targetId;});
+      if(tu){ await DB.updUser(targetId,{points:(tu.points||0)+earnedPoints}); return; }
+    }
+    await DB.updUser(userId,{points:cur+earnedPoints});
+  },
+  /* 포인트 차감 */
+  deductPoints: async function(userId, amount){
+    var u=S.users.find(function(x){return x.id===userId;}); if(!u) return;
+    var newPts=Math.max(0,(u.points||0)-amount);
+    await DB.updUser(userId,{points:newPts});
+  },
+  /* 포인트 이관 */
+  transferPoints: async function(fromId, toId, amount){
+    var fu=S.users.find(function(x){return x.id===fromId;});
+    var tu=S.users.find(function(x){return x.id===toId;});
+    if(!fu||!tu) throw new Error('회원을 찾을 수 없습니다.');
+    if((fu.points||0)<amount) throw new Error('포인트가 부족합니다.');
+    await DB.updUser(fromId,{points:(fu.points||0)-amount});
+    await DB.updUser(toId,{points:(tu.points||0)+amount});
+  }
 };
 
 /* ─────────────────────────────────────────────
@@ -874,7 +969,7 @@ var _termsTarget=null;
 var TERMS_DATA={
   terms1:{
     title:'[필수] 서비스 이용약관 동의',
-    body:`본 약관은 "옷장 속 작은 빵집"(이하 '서비스')의 이용과 관련하여 판매자와 회원 간의 권리, 의무 및 책임사항을 규정합니다.
+    body:`본 약관은 "옷장 속의 작은 빵집"(이하 '서비스')의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정합니다.
 
 제1조 (목적)
 본 약관은 서비스 이용에 관한 기본적인 사항을 규정함을 목적으로 합니다.
@@ -884,7 +979,7 @@ var TERMS_DATA={
 회원은 정확한 정보를 입력해야 하며, 허위 정보 입력 시 서비스 이용이 제한될 수 있습니다.
 
 제3조 (서비스 내용)
-본 서비스는 부곡이웃교회 내 성도님을 대상으로 빵 주문 및 판매를 위한 모바일 앱입니다.
+본 서비스는 부곡이웃교회 내 빵 주문 및 판매를 위한 모바일 앱입니다.
 회원은 앱을 통해 상품을 주문하고 지정된 장소에서 픽업할 수 있습니다.
 
 제4조 (주문 및 결제)
@@ -994,11 +1089,69 @@ function setQty(id,d){
 
 function renderCartFt(){
   var ft=document.getElementById('cart-ft'); var keys=Object.keys(S.cart);
-  if(!keys.length){ ft.style.display='none'; return; }
+  if(!keys.length){ ft.style.display='none'; S.pointUseAmount=0; return; }
   ft.style.display='block';
-  var total=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
-  document.getElementById('cart-total').textContent=total.toLocaleString()+'원';
+  var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
+  document.getElementById('cart-total').textContent=rawTotal.toLocaleString()+'원';
+  // 포인트 UI
+  var myPts=S.user?(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0:0;
+  var ptWrap=document.getElementById('point-use-wrap');
+  var ptAvail=document.getElementById('pt-avail');
+  if(myPts>=10000){
+    ptWrap.style.display='block';
+    ptAvail.textContent='보유 '+myPts.toLocaleString()+'P';
+  } else {
+    ptWrap.style.display='none'; S.pointUseAmount=0;
+  }
+  updatePayTotal(rawTotal);
   renderDlvBtns();
+}
+
+function updatePayTotal(rawTotal){
+  var pt=S.pointUseAmount||0;
+  var discRow=document.getElementById('point-disc-row');
+  var payRow=document.getElementById('pay-total-row');
+  if(pt>0){
+    discRow.style.display='flex'; payRow.style.display='flex';
+    document.getElementById('point-disc-amt').textContent='-'+pt.toLocaleString()+'P';
+    document.getElementById('pay-total-amt').textContent=Math.max(0,rawTotal-pt).toLocaleString()+'원';
+  } else {
+    discRow.style.display='none'; payRow.style.display='none';
+  }
+}
+
+function onPointInput(){
+  var keys=Object.keys(S.cart);
+  var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
+  var myPts=(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0;
+  var v=parseInt(document.getElementById('pt-input').value)||0;
+  var msg=document.getElementById('pt-msg');
+  if(v<10000&&v>0){ msg.textContent='최소 10,000P 이상 사용 가능합니다.'; msg.style.display='block'; S.pointUseAmount=0; }
+  else if(v>myPts){ msg.textContent='보유 포인트('+myPts.toLocaleString()+'P)를 초과할 수 없습니다.'; msg.style.display='block'; S.pointUseAmount=0; }
+  else if(v>rawTotal){ msg.textContent='주문금액('+rawTotal.toLocaleString()+'원)을 초과할 수 없습니다.'; msg.style.display='block'; S.pointUseAmount=rawTotal; }
+  else { msg.style.display='none'; S.pointUseAmount=v; }
+  updatePayTotal(rawTotal);
+}
+
+function applyMaxPoint(){
+  var keys=Object.keys(S.cart);
+  var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
+  var myPts=(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0;
+  var use=Math.min(myPts,rawTotal);
+  if(use<10000){ showToast('보유 포인트가 10,000P 미만입니다.','warn'); return; }
+  document.getElementById('pt-input').value=use;
+  document.getElementById('pt-msg').style.display='none';
+  S.pointUseAmount=use;
+  updatePayTotal(rawTotal);
+}
+
+function clearPoint(){
+  document.getElementById('pt-input').value='';
+  document.getElementById('pt-msg').style.display='none';
+  S.pointUseAmount=0;
+  var keys=Object.keys(S.cart);
+  var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
+  updatePayTotal(rawTotal);
 }
 
 function renderDlvBtns(){
@@ -1023,9 +1176,24 @@ function applyDlv(btn,sel){
 async function doOrder(){
   var keys=Object.keys(S.cart); if(!keys.length){ showToast('빵을 선택해주세요!','warn'); return; }
   var items=keys.map(function(id){ var p=S.products.find(function(p){return p.id===id;}); return {productId:id,name:p.name,price:p.price,qty:S.cart[id]}; });
-  var total=items.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var order={id:Date.now().toString(),userId:S.user.id,userName:S.user.name,userPhone:S.user.phone||'-',items:items,total:total,delivery:S.delivery,status:'주문중',deliveryStatus:'',createdAt:new Date().toLocaleDateString('ko-KR')};
-  try{ await DB.addOrder(order); S.cart={}; nav('orders'); showToast('주문이 접수되었습니다! 🎉'); }
+  var rawTotal=items.reduce(function(s,i){return s+i.price*i.qty;},0);
+  var ptUse=S.pointUseAmount||0;
+  // 포인트 유효성 재확인
+  if(ptUse>0){
+    var myPts=(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0;
+    if(ptUse<10000){ showToast('포인트는 10,000P 이상 사용 가능합니다.','warn'); return; }
+    if(ptUse>myPts){ showToast('보유 포인트가 부족합니다.','warn'); return; }
+  }
+  var payTotal=Math.max(0,rawTotal-ptUse);
+  var order={id:Date.now().toString(),userId:S.user.id,userName:S.user.name,userPhone:S.user.phone||'-',
+    items:items,total:rawTotal,pointUsed:ptUse,payTotal:payTotal,
+    delivery:S.delivery,status:'주문중',deliveryStatus:'',createdAt:new Date().toLocaleDateString('ko-KR')};
+  try{
+    if(ptUse>0) await DB.deductPoints(S.user.id, ptUse);
+    await DB.addOrder(order);
+    S.cart={}; S.pointUseAmount=0;
+    nav('orders'); showToast('주문이 접수되었습니다! 🎉');
+  }
   catch(e){ showToast('주문 실패: '+e.message,'error'); }
 }
 
@@ -1119,10 +1287,13 @@ function renderBuyerOrders(){
     var sc=o.status==='주문중'?'s-w':o.status==='주문완료'?'s-g':'s-r';
     var sl=o.status==='주문중'?'🕐 주문 중':o.status==='주문완료'?'✅ 주문 완료':'❌ 취소됨';
     var rows=o.items.map(function(it){return '<div class="orow"><span>'+esc(it.name)+' × '+it.qty+'</span><span class="oamt">'+(it.price*it.qty).toLocaleString()+'원</span></div>';}).join('');
-    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p><p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
+    var ptRow=o.pointUsed>0?'<div class="orow"><span style="color:var(--pt);">💜 포인트 차감</span><span class="oamt" style="color:var(--pt);">-'+o.pointUsed.toLocaleString()+'P</span></div>':'';
+    var payRow=o.pointUsed>0?'<div class="ototrow"><span style="color:var(--pd);">실 결제금액</span><span style="color:var(--pd);font-weight:900;">'+(o.payTotal||o.total).toLocaleString()+'원</span></div>':'';
+    var earnRow=o.status==='주문완료'&&o.pointUsed!==undefined?'<div style="background:var(--ptl);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--pt);font-weight:700;">💜 적립 포인트: +'+Math.floor((o.payTotal!==undefined?o.payTotal:o.total)*0.05).toLocaleString()+'P</div>':'';
+    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p>'+(o.pointUsed>0?'<p style="font-size:12px;color:var(--pt);font-weight:700;margin-top:6px;">💜 포인트 '+o.pointUsed.toLocaleString()+'P 차감 적용됨 · 실 결제금액 '+(o.payTotal||o.total).toLocaleString()+'원 입금</p>':'')+'<p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
     var cancelBtn=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="doBuyerCancel(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">🗑️ 주문 취소</button></div>':'';
-    return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div></div>'+bank+cbox+cancelBtn+deliveryTrackHtml(o)+'</div>';
+    return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+ptRow+'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div>'+payRow+'</div>'+earnRow+bank+cbox+cancelBtn+deliveryTrackHtml(o)+'</div>';
   }).join('');
 }
 
@@ -1188,7 +1359,18 @@ function renderAdminOrders(){
   }).join('');
 }
 
-async function approveOrder(id){ try{ await DB.updOrder(id,{status:'주문완료',deliveryStatus:'배송중'}); renderAdminOrders(); showToast('주문 승인 및 배송 시작! 🚚'); }catch(e){ showToast('오류: '+e.message,'error'); } }
+async function approveOrder(id){
+  try{
+    var o=S.orders.find(function(x){return x.id===id;}); if(!o) return;
+    await DB.updOrder(id,{status:'주문완료',deliveryStatus:'배송중'});
+    // 포인트 적립: 실결제금액(포인트 차감 후)의 5%
+    var payBase=o.payTotal!==undefined?o.payTotal:o.total;
+    var earned=Math.floor(payBase*0.05);
+    if(earned>0) await DB.givePoints(o.userId, earned);
+    renderAdminOrders();
+    showToast('주문 승인! 🚚 '+earned.toLocaleString()+'P 적립됨');
+  }catch(e){ showToast('오류: '+e.message,'error'); }
+}
 async function completeDelivery(id){ try{ await DB.updOrder(id,{deliveryStatus:'배송완료'}); renderAdminOrders(); showToast('배송완료 처리되었습니다. 🏁'); }catch(e){ showToast('오류: '+e.message,'error'); } }
 function openCancelModal(id){ S.cancelTarget=id; document.getElementById('cancel-reason').value=''; document.getElementById('modal').style.display='flex'; }
 function closeModal(){ document.getElementById('modal').style.display='none'; S.cancelTarget=null; }
@@ -1210,18 +1392,44 @@ function renderAdminMembers(){
     return (u.name||'').toLowerCase().includes(kw)||(u.email||'').toLowerCase().includes(kw);
   });
   document.getElementById('admin-member-count').textContent='총 '+S.users.length+'명 중 '+filtered.length+'명 표시';
+  // 이관 셀렉트 populate
+  ['pt-from','pt-to','auto-from','auto-to'].forEach(function(sid){
+    var sel=document.getElementById(sid); if(!sel) return;
+    var cur=sel.value;
+    sel.innerHTML='<option value="">-- 회원 선택 --</option>'+S.users.map(function(u){
+      return '<option value="'+u.id+'"'+(u.id===cur?' selected':'')+'>'+esc(u.name)+' ('+esc(u.email)+') · '+(u.points||0).toLocaleString()+'P</option>';
+    }).join('');
+  });
+  // 자동이관 현황 표시
+  var infoEl=document.getElementById('auto-transfer-info');
+  var atKeys=Object.keys(S.autoTransfer);
+  if(atKeys.length){
+    var lines=atKeys.map(function(fid){
+      var fu=S.users.find(function(x){return x.id===fid;});
+      var tu=S.users.find(function(x){return x.id===S.autoTransfer[fid];});
+      return (fu?fu.name:'?')+' → '+(tu?tu.name:'?');
+    });
+    infoEl.textContent='현재 설정: '+lines.join(' / '); infoEl.style.display='block';
+  } else { infoEl.style.display='none'; }
   if(!filtered.length){
     list.innerHTML='<div class="empty"><div class="ei">👤</div><p>'+(S.users.length?'검색 결과가 없습니다':'가입 회원이 없습니다')+'</p></div>'; return;
   }
   list.innerHTML=filtered.map(function(u){
     var orderCnt=S.orders.filter(function(o){return o.userId===u.id;}).length;
     var uid=u.id; var uname=esc(u.name);
+    var pts=(u.points||0).toLocaleString();
+    var autoTo=S.autoTransfer[u.id];
+    var autoLabel=autoTo?(function(){var t=S.users.find(function(x){return x.id===autoTo;}); return t?'→ '+t.name:'';})():'';
     return '<div class="order-card" style="padding:16px;">'
-      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
       +'<span style="font-size:30px;">👤</span>'
       +'<div style="flex:1;min-width:0;">'
       +'<p style="font-size:15px;font-weight:800;color:var(--pd);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+uname+'</p>'
       +'<p style="font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(u.email)+'</p>'
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0;">'
+      +'<p style="font-size:15px;font-weight:900;color:var(--pt);">'+pts+'P</p>'
+      +(autoLabel?'<p style="font-size:11px;color:var(--pt);font-weight:600;">자동이관 '+autoLabel+'</p>':'')
       +'</div></div>'
       +'<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:2;margin-bottom:12px;">'
       +'<div>📞 '+esc(u.phone||'-')+'</div>'
@@ -1233,6 +1441,41 @@ function renderAdminMembers(){
       +'</div>'
       +'</div>';
   }).join('');
+}
+
+async function doTransferPoints(){
+  var fromId=document.getElementById('pt-from').value;
+  var toId=document.getElementById('pt-to').value;
+  var amt=parseInt(document.getElementById('pt-amount').value)||0;
+  var err=document.getElementById('pt-tr-err');
+  if(!fromId||!toId){ err.textContent='출발·도착 회원을 모두 선택해주세요.'; err.style.display='block'; return; }
+  if(fromId===toId){ err.textContent='같은 회원은 선택할 수 없습니다.'; err.style.display='block'; return; }
+  if(amt<=0){ err.textContent='이관할 포인트를 입력해주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  var fu=S.users.find(function(u){return u.id===fromId;});
+  if(!confirm('['+fu.name+'] 회원의 '+amt.toLocaleString()+'P를 이관하시겠습니까?')) return;
+  try{
+    await DB.transferPoints(fromId, toId, amt);
+    document.getElementById('pt-amount').value='';
+    renderAdminMembers(); showToast(amt.toLocaleString()+'P 이관 완료! 💜');
+  }catch(e){ err.textContent='오류: '+e.message; err.style.display='block'; }
+}
+
+async function doSetAutoTransfer(){
+  var fromId=document.getElementById('auto-from').value;
+  var toId=document.getElementById('auto-to').value;
+  if(!fromId||!toId){ showToast('출발·도착 회원을 모두 선택해주세요.','warn'); return; }
+  if(fromId===toId){ showToast('같은 회원은 선택할 수 없습니다.','warn'); return; }
+  S.autoTransfer[fromId]=toId;
+  try{ await DB.saveConfig(); renderAdminMembers(); showToast('자동이관 설정이 저장되었습니다. ⚙️'); }
+  catch(e){ showToast('저장 실패: '+e.message,'error'); }
+}
+
+async function doClearAutoTransfer(){
+  if(!confirm('모든 자동이관 설정을 초기화하시겠습니까?')) return;
+  S.autoTransfer={};
+  try{ await DB.saveConfig(); renderAdminMembers(); showToast('자동이관 설정이 초기화되었습니다.'); }
+  catch(e){ showToast('저장 실패: '+e.message,'error'); }
 }
 
 async function doForceWithdraw(id, name){
@@ -1259,6 +1502,10 @@ async function doResetUserPw(id, name){
 ───────────────────────────────────────────── */
 function renderMyAccount(){
   var u=S.user;
+  var fullU=S.users.find(function(x){return x.id===u.id;})||u;
+  var pts=(fullU.points||0);
+  var ptEl=document.getElementById('my-point-balance');
+  if(ptEl) ptEl.textContent=pts.toLocaleString()+'P';
   var el=document.getElementById('my-account-info');
   if(el) el.innerHTML=
     '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--tx);">'
