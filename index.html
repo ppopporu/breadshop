@@ -495,31 +495,54 @@ service cloud.firestore {
 
  <!-- 장바구니 하단 -->
  <div id="cart-ft">
+  <!-- 수령 장소 -->
   <p style="font-size:13px;font-weight:700;color:var(--sb);margin-bottom:10px;">📍 수령 장소 선택</p>
   <div id="dlv-btns" style="display:flex;gap:8px;margin-bottom:14px;"></div>
-  <!-- 포인트 사용 -->
-  <div id="point-use-wrap" style="display:none;background:var(--ptl);border-radius:14px;padding:12px 14px;margin-bottom:12px;">
+
+  <!-- 포인트 박스 (항상 표시) -->
+  <div id="point-use-wrap" style="border-radius:16px;overflow:hidden;margin-bottom:14px;border:1.5px solid rgba(124,58,237,.25);">
+   <!-- 잔액 헤더 -->
+   <div style="background:var(--pt);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-size:13px;font-weight:800;color:#fff;">💜 포인트 사용</span>
+    <div style="text-align:right;">
+     <span style="font-size:11px;color:rgba(255,255,255,.75);">보유 잔액</span>
+     <span id="pt-avail" style="font-size:15px;font-weight:900;color:#fff;margin-left:6px;"></span>
+    </div>
+   </div>
+   <!-- 입력 영역 -->
+   <div style="background:var(--ptl);padding:12px 14px;">
+    <p id="pt-unavail-msg" style="font-size:12px;color:var(--mu);font-weight:600;text-align:center;display:none;padding:4px 0;">10,000P 이상 보유 시 포인트로 결제할 수 있습니다</p>
+    <div id="pt-input-area" style="display:none;">
+     <p style="font-size:12px;color:var(--pt);font-weight:600;margin-bottom:8px;">사용할 포인트를 입력하세요 (최소 10,000P)</p>
+     <div style="display:flex;gap:6px;align-items:center;">
+      <input id="pt-input" type="number" min="0" step="1000" placeholder="0" oninput="onPointInput()"
+       style="flex:1;border:1.5px solid rgba(124,58,237,.35);border-radius:10px;padding:9px 12px;font-size:15px;font-weight:700;font-family:var(--f);background:#fff;color:var(--pt);outline:none;text-align:right;">
+      <span style="font-size:14px;font-weight:700;color:var(--pt);flex-shrink:0;">P</span>
+      <button onclick="applyMaxPoint()" style="background:var(--pt);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--f);flex-shrink:0;">전액</button>
+      <button onclick="clearPoint()" style="background:#fff;color:var(--pt);border:1.5px solid rgba(124,58,237,.3);border-radius:10px;padding:9px 10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--f);flex-shrink:0;">취소</button>
+     </div>
+     <p id="pt-msg" style="font-size:12px;color:var(--re);font-weight:600;margin-top:6px;display:none;"></p>
+    </div>
+   </div>
+  </div>
+
+  <!-- 금액 요약 -->
+  <div style="background:#FFF9F5;border-radius:14px;padding:14px 16px;margin-bottom:12px;border:1px solid var(--bd);">
    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-    <span style="font-size:13px;font-weight:800;color:var(--pt);">💜 포인트 사용</span>
-    <span id="pt-avail" style="font-size:12px;color:var(--pt);font-weight:600;"></span>
+    <span style="font-size:13px;color:var(--mu);font-weight:600;">주문 금액</span>
+    <span id="cart-total" style="font-size:14px;font-weight:700;color:var(--tx);"></span>
    </div>
-   <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-    <input id="pt-input" type="number" min="0" step="1000" placeholder="사용할 포인트" oninput="onPointInput()"
-     style="flex:1;border:1.5px solid rgba(124,58,237,.3);border-radius:10px;padding:8px 10px;font-size:14px;font-family:var(--f);background:#fff;color:var(--tx);outline:none;">
-    <button onclick="applyMaxPoint()" style="background:var(--pt);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);flex-shrink:0;">전액</button>
-    <button onclick="clearPoint()" style="background:#E9E6FF;color:var(--pt);border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--f);flex-shrink:0;">취소</button>
+   <div id="point-disc-row" style="display:none;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span style="font-size:13px;color:var(--pt);font-weight:600;">💜 포인트 차감</span>
+    <span id="point-disc-amt" style="font-size:14px;color:var(--pt);font-weight:800;"></span>
    </div>
-   <p id="pt-msg" style="font-size:12px;color:var(--pt);font-weight:600;display:none;"></p>
+   <div style="height:1px;background:var(--bd);margin-bottom:10px;"></div>
+   <div style="display:flex;justify-content:space-between;align-items:center;">
+    <span id="pay-label" style="font-size:15px;color:var(--pd);font-weight:800;">실 결제금액</span>
+    <span id="pay-total-amt" style="font-size:18px;color:var(--p);font-weight:900;"></span>
+   </div>
   </div>
-  <div class="total-row"><span class="total-lbl">총 금액</span><span class="total-amt" id="cart-total">0원</span></div>
-  <div id="point-disc-row" style="display:none;justify-content:space-between;align-items:center;margin-top:4px;margin-bottom:4px;">
-   <span style="font-size:13px;color:var(--pt);font-weight:600;">💜 포인트 차감</span>
-   <span id="point-disc-amt" style="font-size:13px;color:var(--pt);font-weight:700;"></span>
-  </div>
-  <div id="pay-total-row" style="display:none;justify-content:space-between;align-items:center;margin-bottom:8px;">
-   <span style="font-size:14px;color:var(--pd);font-weight:800;">실 결제금액</span>
-   <span id="pay-total-amt" style="font-size:15px;color:var(--pd);font-weight:900;"></span>
-  </div>
+
   <button onclick="doOrder()" class="btn-dark">주문하기 🛒</button>
  </div>
 
@@ -1093,15 +1116,19 @@ function renderCartFt(){
   ft.style.display='block';
   var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
   document.getElementById('cart-total').textContent=rawTotal.toLocaleString()+'원';
-  // 포인트 UI
+
+  // 포인트 잔액
   var myPts=S.user?(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0:0;
-  var ptWrap=document.getElementById('point-use-wrap');
-  var ptAvail=document.getElementById('pt-avail');
+  document.getElementById('pt-avail').textContent=myPts.toLocaleString()+'P';
+
+  // 입력 영역 표시 여부
+  var inputArea=document.getElementById('pt-input-area');
+  var unavailMsg=document.getElementById('pt-unavail-msg');
   if(myPts>=10000){
-    ptWrap.style.display='block';
-    ptAvail.textContent='보유 '+myPts.toLocaleString()+'P';
+    inputArea.style.display='block'; unavailMsg.style.display='none';
   } else {
-    ptWrap.style.display='none'; S.pointUseAmount=0;
+    inputArea.style.display='none'; unavailMsg.style.display='block';
+    S.pointUseAmount=0;
   }
   updatePayTotal(rawTotal);
   renderDlvBtns();
@@ -1110,13 +1137,16 @@ function renderCartFt(){
 function updatePayTotal(rawTotal){
   var pt=S.pointUseAmount||0;
   var discRow=document.getElementById('point-disc-row');
-  var payRow=document.getElementById('pay-total-row');
+  var payLabel=document.getElementById('pay-label');
   if(pt>0){
-    discRow.style.display='flex'; payRow.style.display='flex';
+    discRow.style.display='flex';
     document.getElementById('point-disc-amt').textContent='-'+pt.toLocaleString()+'P';
+    payLabel.textContent='실 결제금액';
     document.getElementById('pay-total-amt').textContent=Math.max(0,rawTotal-pt).toLocaleString()+'원';
   } else {
-    discRow.style.display='none'; payRow.style.display='none';
+    discRow.style.display='none';
+    payLabel.textContent='실 결제금액';
+    document.getElementById('pay-total-amt').textContent=rawTotal.toLocaleString()+'원';
   }
 }
 
