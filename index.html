@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#C17F5A">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>옷장 속 작은 빵집</title>
+<title>옷장 속의 작은 빵집</title>
 
 <!--
   ★ Firebase Compat SDK v9.22.2 — gstatic.com 공식 CDN
@@ -153,7 +153,7 @@ html,body{height:100%;font-family:'Malgun Gothic','맑은 고딕','Apple SD Goth
   <div id="p-setup" class="pg" style="padding-top:24px;">
    <div style="text-align:center;margin-bottom:20px;">
     <div id="setup-logo" style="display:flex;justify-content:center;"></div>
-    <div class="store-name-big" style="text-align:center;">옷장 속 작은 빵집</div>
+    <div class="store-name-big" style="text-align:center;">옷장 속의 작은 빵집</div>
     <div style="display:inline-block;" class="fb-badge">🔥 Firebase Firestore 무료 영구 DB</div>
     <p style="font-size:13px;color:var(--mu);margin-top:8px;">아래 4단계를 따라 무료 DB를 연결하세요<br>신용카드 없이 영구 무료 (Spark 플랜)</p>
    </div>
@@ -192,7 +192,7 @@ service cloud.firestore {
   <!-- ════════ SPLASH ════════ -->
   <div id="p-splash" class="pg-full" style="background:linear-gradient(150deg,#FFF3E0,#FDE8EF);padding:40px 24px;">
    <div id="splash-logo"></div>
-   <h1 class="store-name-big" style="text-align:center;">옷장 속 작은 빵집</h1>
+   <h1 class="store-name-big" style="text-align:center;">옷장 속의 작은 빵집</h1>
    <p class="sub-txt" style="margin-top:4px;">따뜻한 빵을 배달해 드려요 🍞</p>
    <div style="margin-top:36px;display:flex;gap:8px;">
     <div style="width:9px;height:9px;border-radius:50%;background:var(--pk);animation:dot 1.2s 0s infinite;"></div>
@@ -205,7 +205,7 @@ service cloud.firestore {
   <div id="p-login" class="pg" style="padding-top:40px;">
    <div style="text-align:center;margin-bottom:30px;">
     <div id="login-logo" style="display:flex;justify-content:center;"></div>
-    <h1 class="store-name-big" style="text-align:center;">옷장 속 작은 빵집</h1>
+    <h1 class="store-name-big" style="text-align:center;">옷장 속의 작은 빵집</h1>
     <p class="sub-txt">The Little Bakery in the Wardrobe</p>
    </div>
    <div class="card" style="padding:26px 22px;">
@@ -266,7 +266,7 @@ service cloud.firestore {
   <!-- ════════ SHOP ════════ -->
   <div id="p-shop" class="pg">
    <div style="text-align:center;margin-bottom:18px;">
-    <h2 class="ph2" style="white-space:nowrap;font-size:19px;">🍞 옷장 속 작은 빵집</h2>
+    <h2 class="ph2" style="white-space:nowrap;font-size:19px;">🍞 옷장 속의 작은 빵집</h2>
     <p class="ps" style="margin-bottom:0;">오늘의 빵을 선택해주세요</p>
    </div>
    <!-- 공지 -->
@@ -373,8 +373,8 @@ service cloud.firestore {
   <div id="p-admin-members" class="pg">
    <h2 class="ph2">👥 회원 관리</h2>
    <p class="ps">가입 회원을 조회하고 관리해요</p>
-   <!-- 포인트 이관 -->
-   <div class="card" style="background:var(--ptl);border:1.5px solid rgba(124,58,237,.2);margin-bottom:14px;">
+   <!-- 포인트 이관 (POINTS_ENABLED=true 시 활성화) -->
+   <div id="admin-point-transfer" style="display:none;margin-bottom:14px;" class="card">
     <p class="sec-title" style="color:var(--pt);">💜 포인트 이관</p>
     <div class="fld"><label style="color:var(--pt);">출발 회원 (이관할 회원)</label>
      <select id="pt-from" style="border:1.5px solid rgba(124,58,237,.3);border-radius:12px;padding:11px 14px;font-size:14px;width:100%;font-family:var(--f);background:#fff;color:var(--tx);outline:none;"></select>
@@ -420,8 +420,8 @@ service cloud.firestore {
   <div id="p-my-account" class="pg">
    <h2 class="ph2">👤 내 계정</h2>
    <p class="ps">계정 정보를 조회하고 관리해요</p>
-   <!-- 포인트 잔액 -->
-   <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,var(--ptl),#F5F3FF);border:1.5px solid rgba(124,58,237,.2);">
+   <!-- 포인트 잔액 (POINTS_ENABLED=true 시 활성화) -->
+   <div id="my-point-card" style="display:none;margin-bottom:14px;background:linear-gradient(135deg,var(--ptl),#F5F3FF);border:1.5px solid rgba(124,58,237,.2);border-radius:20px;padding:18px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
      <div>
       <p style="font-size:13px;font-weight:700;color:var(--pt);margin-bottom:4px;">💜 내 포인트 잔액</p>
@@ -502,8 +502,8 @@ service cloud.firestore {
   <p style="font-size:13px;font-weight:700;color:var(--sb);margin-bottom:10px;">📍 수령 장소 선택</p>
   <div id="dlv-btns" style="display:flex;gap:8px;margin-bottom:14px;"></div>
 
-  <!-- 포인트 박스 (항상 표시) -->
-  <div id="point-use-wrap" style="border-radius:16px;overflow:hidden;margin-bottom:14px;border:1.5px solid rgba(124,58,237,.25);">
+  <!-- 포인트 박스 (POINTS_ENABLED=true 시 활성화) -->
+  <div id="point-use-wrap" style="display:none;border-radius:16px;overflow:hidden;margin-bottom:14px;border:1.5px solid rgba(124,58,237,.25);">
    <!-- 잔액 헤더 -->
    <div style="background:var(--pt);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
     <span style="font-size:13px;font-weight:800;color:#fff;">💜 포인트 사용</span>
@@ -641,6 +641,13 @@ function initFB(cfg) {
    앱 상태
 ───────────────────────────────────────────── */
 var LOCS = ['부곡이웃교회', '꼬르륵'];
+/* ══════════════════════════════════════════
+   포인트 기능 ON/OFF 플래그
+   true  → 포인트 기능 활성화
+   false → 포인트 기능 비활성화 (주석처리 상태)
+══════════════════════════════════════════ */
+var POINTS_ENABLED = false;
+
 var S = {
   view:'setup', user:null,
   products:[], orders:[], users:[],
@@ -995,7 +1002,7 @@ var _termsTarget=null;
 var TERMS_DATA={
   terms1:{
     title:'[필수] 서비스 이용약관 동의',
-    body:`본 약관은 "옷장 속 작은 빵집"(이하 '서비스')의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정합니다.
+    body:`본 약관은 "옷장 속의 작은 빵집"(이하 '서비스')의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정합니다.
 
 제1조 (목적)
 본 약관은 서비스 이용에 관한 기본적인 사항을 규정함을 목적으로 합니다.
@@ -1039,7 +1046,7 @@ var TERMS_DATA={
   },
   terms2:{
     title:'[필수] 개인정보 수집 및 이용 동의',
-    body:`"옷장 속 작은 빵집"(이하 '서비스')은 개인정보 보호법에 따라 이용자의 개인정보를 보호하며, 아래와 같이 개인정보를 수집·이용합니다.
+    body:`"옷장 속의 작은 빵집"(이하 '서비스')은 개인정보 보호법에 따라 이용자의 개인정보를 보호하며, 아래와 같이 개인정보를 수집·이용합니다.
 
 1. 수집하는 개인정보 항목
   - 필수 항목: 이름, 이메일, 휴대전화번호
@@ -1120,17 +1127,21 @@ function renderCartFt(){
   var rawTotal=keys.reduce(function(s,id){ var p=S.products.find(function(p){return p.id===id;}); return s+(p?p.price*S.cart[id]:0); },0);
   document.getElementById('cart-total').textContent=rawTotal.toLocaleString()+'원';
 
-  // 포인트 잔액
-  var myPts=S.user?(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0:0;
-  document.getElementById('pt-avail').textContent=myPts.toLocaleString()+'P';
-
-  // 입력 영역 표시 여부
-  var inputArea=document.getElementById('pt-input-area');
-  var unavailMsg=document.getElementById('pt-unavail-msg');
-  if(myPts>=10000){
-    inputArea.style.display='block'; unavailMsg.style.display='none';
+  // 포인트 UI (POINTS_ENABLED=true 시 활성화)
+  if(POINTS_ENABLED){
+    var myPts=S.user?(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0:0;
+    document.getElementById('pt-avail').textContent=myPts.toLocaleString()+'P';
+    var inputArea=document.getElementById('pt-input-area');
+    var unavailMsg=document.getElementById('pt-unavail-msg');
+    if(myPts>=10000){
+      inputArea.style.display='block'; unavailMsg.style.display='none';
+    } else {
+      inputArea.style.display='none'; unavailMsg.style.display='block';
+      S.pointUseAmount=0;
+    }
+    document.getElementById('point-use-wrap').style.display='block';
   } else {
-    inputArea.style.display='none'; unavailMsg.style.display='block';
+    document.getElementById('point-use-wrap').style.display='none';
     S.pointUseAmount=0;
   }
   updatePayTotal(rawTotal);
@@ -1210,9 +1221,9 @@ async function doOrder(){
   var keys=Object.keys(S.cart); if(!keys.length){ showToast('빵을 선택해주세요!','warn'); return; }
   var items=keys.map(function(id){ var p=S.products.find(function(p){return p.id===id;}); return {productId:id,name:p.name,price:p.price,qty:S.cart[id]}; });
   var rawTotal=items.reduce(function(s,i){return s+i.price*i.qty;},0);
-  var ptUse=S.pointUseAmount||0;
-  // 포인트 유효성 재확인
-  if(ptUse>0){
+  var ptUse=POINTS_ENABLED?(S.pointUseAmount||0):0;
+  // 포인트 유효성 재확인 (POINTS_ENABLED=true 시만)
+  if(POINTS_ENABLED && ptUse>0){
     var myPts=(S.users.find(function(u){return u.id===S.user.id;})||{}).points||0;
     if(ptUse<10000){ showToast('포인트는 10,000P 이상 사용 가능합니다.','warn'); return; }
     if(ptUse>myPts){ showToast('보유 포인트가 부족합니다.','warn'); return; }
@@ -1222,7 +1233,7 @@ async function doOrder(){
     items:items,total:rawTotal,pointUsed:ptUse,payTotal:payTotal,
     delivery:S.delivery,status:'주문중',deliveryStatus:'',createdAt:new Date().toLocaleDateString('ko-KR')};
   try{
-    if(ptUse>0) await DB.deductPoints(S.user.id, ptUse);
+    if(POINTS_ENABLED && ptUse>0) await DB.deductPoints(S.user.id, ptUse);
     await DB.addOrder(order);
     S.cart={}; S.pointUseAmount=0;
     nav('orders'); showToast('주문이 접수되었습니다! 🎉');
@@ -1320,12 +1331,12 @@ function renderBuyerOrders(){
     var sc=o.status==='주문중'?'s-w':o.status==='주문완료'?'s-g':'s-r';
     var sl=o.status==='주문중'?'🕐 주문 중':o.status==='주문완료'?'✅ 주문 완료':'❌ 취소됨';
     var rows=o.items.map(function(it){return '<div class="orow"><span>'+esc(it.name)+' × '+it.qty+'</span><span class="oamt">'+(it.price*it.qty).toLocaleString()+'원</span></div>';}).join('');
-    var ptRow=o.pointUsed>0?'<div class="orow"><span style="color:var(--pt);">💜 포인트 차감</span><span class="oamt" style="color:var(--pt);">-'+o.pointUsed.toLocaleString()+'P</span></div>':'';
+    var ptRow=POINTS_ENABLED&&o.pointUsed>0?'<div class="orow"><span style="color:var(--pt);">💜 포인트 차감</span><span class="oamt" style="color:var(--pt);">-'+o.pointUsed.toLocaleString()+'P</span></div>':'';
     var realPay=o.pointUsed>0?(o.payTotal!==undefined?o.payTotal:Math.max(0,o.total-o.pointUsed)):o.total;
-    var payRow=o.pointUsed>0?'<div class="ototrow" style="border-top:1.5px solid var(--bd);margin-top:6px;padding-top:8px;"><span style="color:var(--pd);font-weight:800;">💳 실 결제금액</span><span style="color:var(--p);font-weight:900;font-size:16px;">'+realPay.toLocaleString()+'원</span></div>':'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div>';
-    var earnRow=o.status==='주문완료'&&o.pointUsed!==undefined?'<div style="background:var(--ptl);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--pt);font-weight:700;">💜 적립 포인트: +'+Math.floor(realPay*0.05).toLocaleString()+'P</div>':'';
-    var bankPay=o.pointUsed>0?realPay:o.total;
-    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p>'+(o.pointUsed>0?'<div style="background:var(--ptl);border-radius:8px;padding:8px 10px;margin-top:10px;"><p style="font-size:12px;color:var(--pt);font-weight:700;">💜 포인트 '+o.pointUsed.toLocaleString()+'P 차감 적용</p><p style="font-size:15px;color:var(--pt);font-weight:900;margin-top:2px;">입금하실 금액: '+realPay.toLocaleString()+'원</p></div>':'')+'<p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
+    var payRow=POINTS_ENABLED&&o.pointUsed>0?'<div class="ototrow" style="border-top:1.5px solid var(--bd);margin-top:6px;padding-top:8px;"><span style="color:var(--pd);font-weight:800;">💳 실 결제금액</span><span style="color:var(--p);font-weight:900;font-size:16px;">'+realPay.toLocaleString()+'원</span></div>':'<div class="ototrow"><span style="color:var(--sb);">합계</span><span style="color:var(--p);">'+o.total.toLocaleString()+'원</span></div>';
+    var earnRow=POINTS_ENABLED&&o.status==='주문완료'&&o.pointUsed!==undefined?'<div style="background:var(--ptl);border-radius:10px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--pt);font-weight:700;">💜 적립 포인트: +'+Math.floor(realPay*0.05).toLocaleString()+'P</div>':'';
+    var bankPay=POINTS_ENABLED&&o.pointUsed>0?realPay:o.total;
+    var bank=o.status==='주문중'?'<div class="bank-box"><p style="font-size:13px;font-weight:800;color:var(--or);margin-bottom:8px;">💳 입금 안내</p><p style="font-size:14px;color:var(--tx);margin-bottom:4px;"><strong>'+esc(S.bankInfo.bank)+'</strong> '+esc(S.bankInfo.account)+'</p><p style="font-size:13px;color:var(--sb);">예금주: '+esc(S.bankInfo.holder)+'</p>'+(POINTS_ENABLED&&o.pointUsed>0?'<div style="background:var(--ptl);border-radius:8px;padding:8px 10px;margin-top:10px;"><p style="font-size:12px;color:var(--pt);font-weight:700;">💜 포인트 '+o.pointUsed.toLocaleString()+'P 차감 적용</p><p style="font-size:15px;color:var(--pt);font-weight:900;margin-top:2px;">입금하실 금액: '+realPay.toLocaleString()+'원</p></div>':'')+'<p style="font-size:12px;color:var(--mu);margin-top:8px;">입금 확인 후 주문이 완료됩니다</p></div>':'';
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
     var cancelBtn=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="doBuyerCancel(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">🗑️ 주문 취소</button></div>':'';
     return '<div class="order-card"><div class="om"><div><div style="font-size:12px;color:var(--mu);">🗓 '+o.createdAt+' · 📍 '+esc(o.delivery)+'</div></div><span class="stat '+sc+'">'+sl+'</span></div><div class="oi">'+rows+'<div class="orow" style="border-top:1px dashed var(--bd);margin-top:6px;padding-top:6px;"><span style="color:var(--sb);">주문 금액</span><span class="oamt">'+o.total.toLocaleString()+'원</span></div>'+ptRow+payRow+'</div>'+earnRow+bank+cbox+cancelBtn+deliveryTrackHtml(o)+'</div>';
@@ -1380,8 +1391,8 @@ function renderAdminOrders(){
     var rows=o.items.map(function(it){return '<div class="orow"><span>'+esc(it.name)+' × '+it.qty+'</span><span class="oamt">'+(it.price*it.qty).toLocaleString()+'원</span></div>';}).join('');
     var realPay=o.pointUsed>0?(o.payTotal!==undefined?o.payTotal:Math.max(0,o.total-o.pointUsed)):o.total;
     var amtRows='<div class="orow" style="border-top:1px dashed var(--bd);margin-top:6px;padding-top:6px;"><span style="color:var(--sb);">주문 금액</span><span class="oamt">'+o.total.toLocaleString()+'원</span></div>'
-      +(o.pointUsed>0?'<div class="orow"><span style="color:var(--pt);">💜 포인트 차감</span><span class="oamt" style="color:var(--pt);">-'+o.pointUsed.toLocaleString()+'P</span></div>':'')
-      +'<div class="ototrow" style="'+(o.pointUsed>0?'border-top:1.5px solid var(--bd);margin-top:4px;padding-top:8px;':'')+'"><span style="color:var(--pd);font-weight:800;">💳 실 결제금액</span><span style="color:var(--p);font-weight:900;font-size:15px;">'+realPay.toLocaleString()+'원</span></div>';
+      +(POINTS_ENABLED&&o.pointUsed>0?'<div class="orow"><span style="color:var(--pt);">💜 포인트 차감</span><span class="oamt" style="color:var(--pt);">-'+o.pointUsed.toLocaleString()+'P</span></div>':'')
+      +'<div class="ototrow" style="'+(POINTS_ENABLED&&o.pointUsed>0?'border-top:1.5px solid var(--bd);margin-top:4px;padding-top:8px;':'')+'"><span style="color:var(--pd);font-weight:800;">💳 실 결제금액</span><span style="color:var(--p);font-weight:900;font-size:15px;">'+(POINTS_ENABLED&&o.pointUsed>0?realPay:o.total).toLocaleString()+'원</span></div>';
     var cbox=o.status==='취소'&&o.cancelReason?'<div class="cancel-box"><p style="font-size:13px;font-weight:700;color:var(--re);margin-bottom:6px;">취소 사유</p><p style="font-size:13px;color:var(--tx);">'+esc(o.cancelReason)+'</p></div>':'';
     var approveAct=o.status==='주문중'?'<div class="oact"><button class="obtn" onclick="approveOrder(\''+o.id+'\')" style="background:#4CAF82;color:#ffffff;border:none;">✅ 승인</button><button class="obtn" onclick="openCancelModal(\''+o.id+'\')" style="background:#FFEBEE;color:var(--re);border:1.5px solid rgba(217,68,68,.3);">❌ 취소</button></div>':'';
     var deliveryAct=o.status==='주문완료'&&o.deliveryStatus!=='배송완료'?'<div class="oact"><button class="obtn" onclick="completeDelivery(\''+o.id+'\')" style="background:#3B82F6;color:#ffffff;border:none;">🏁 배송완료 처리</button></div>':'';
@@ -1405,9 +1416,9 @@ async function approveOrder(id){
     // 포인트 적립: 실결제금액(포인트 차감 후)의 5%
     var payBase=o.payTotal!==undefined?o.payTotal:o.total;
     var earned=Math.floor(payBase*0.05);
-    if(earned>0) await DB.givePoints(o.userId, earned);
+    if(POINTS_ENABLED && earned>0) await DB.givePoints(o.userId, earned);
     renderAdminOrders();
-    showToast('주문 승인! 🚚 '+earned.toLocaleString()+'P 적립됨');
+    showToast('주문이 승인되었습니다. 🚚'+(POINTS_ENABLED&&earned>0?' ('+earned.toLocaleString()+'P 적립)':''));
   }catch(e){ showToast('오류: '+e.message,'error'); }
 }
 async function completeDelivery(id){ try{ await DB.updOrder(id,{deliveryStatus:'배송완료'}); renderAdminOrders(); showToast('배송완료 처리되었습니다. 🏁'); }catch(e){ showToast('오류: '+e.message,'error'); } }
@@ -1431,34 +1442,38 @@ function renderAdminMembers(){
     return (u.name||'').toLowerCase().includes(kw)||(u.email||'').toLowerCase().includes(kw);
   });
   document.getElementById('admin-member-count').textContent='총 '+S.users.length+'명 중 '+filtered.length+'명 표시';
-  // 이관 셀렉트 populate
-  ['pt-from','pt-to','auto-from','auto-to'].forEach(function(sid){
+  var ptSection=document.getElementById('admin-point-transfer');
+  if(ptSection) ptSection.style.display=POINTS_ENABLED?'block':'none';
+  // 이관 셀렉트 populate (POINTS_ENABLED 시만)
+  if(POINTS_ENABLED){
+    ['pt-from','pt-to','auto-from','auto-to'].forEach(function(sid){
     var sel=document.getElementById(sid); if(!sel) return;
     var cur=sel.value;
     sel.innerHTML='<option value="">-- 회원 선택 --</option>'+S.users.map(function(u){
       return '<option value="'+u.id+'"'+(u.id===cur?' selected':'')+'>'+esc(u.name)+' ('+esc(u.email)+') · '+(u.points||0).toLocaleString()+'P</option>';
     }).join('');
-  });
-  // 자동이관 현황 표시
-  var infoEl=document.getElementById('auto-transfer-info');
-  var atKeys=Object.keys(S.autoTransfer);
-  if(atKeys.length){
-    var lines=atKeys.map(function(fid){
-      var fu=S.users.find(function(x){return x.id===fid;});
-      var tu=S.users.find(function(x){return x.id===S.autoTransfer[fid];});
-      return (fu?fu.name:'?')+' → '+(tu?tu.name:'?');
     });
-    infoEl.textContent='현재 설정: '+lines.join(' / '); infoEl.style.display='block';
-  } else { infoEl.style.display='none'; }
+    // 자동이관 현황 표시
+    var infoEl=document.getElementById('auto-transfer-info');
+    var atKeys=Object.keys(S.autoTransfer);
+    if(atKeys.length){
+      var lines=atKeys.map(function(fid){
+        var fu=S.users.find(function(x){return x.id===fid;});
+        var tu=S.users.find(function(x){return x.id===S.autoTransfer[fid];});
+        return (fu?fu.name:'?')+' → '+(tu?tu.name:'?');
+      });
+      infoEl.textContent='현재 설정: '+lines.join(' / '); infoEl.style.display='block';
+    } else { infoEl.style.display='none'; }
+  } // end if(POINTS_ENABLED)
   if(!filtered.length){
     list.innerHTML='<div class="empty"><div class="ei">👤</div><p>'+(S.users.length?'검색 결과가 없습니다':'가입 회원이 없습니다')+'</p></div>'; return;
   }
   list.innerHTML=filtered.map(function(u){
     var orderCnt=S.orders.filter(function(o){return o.userId===u.id;}).length;
     var uid=u.id; var uname=esc(u.name);
-    var pts=(u.points||0).toLocaleString();
-    var autoTo=S.autoTransfer[u.id];
-    var autoLabel=autoTo?(function(){var t=S.users.find(function(x){return x.id===autoTo;}); return t?'→ '+t.name:'';})():'';
+    var pts=POINTS_ENABLED?(u.points||0).toLocaleString():null;
+    var autoTo=POINTS_ENABLED?S.autoTransfer[u.id]:null;
+    var autoLabel=POINTS_ENABLED&&autoTo?(function(){var t=S.users.find(function(x){return x.id===autoTo;}); return t?'→ '+t.name:'';})():'';
     return '<div class="order-card" style="padding:16px;">'
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
       +'<span style="font-size:30px;">👤</span>'
@@ -1467,8 +1482,8 @@ function renderAdminMembers(){
       +'<p style="font-size:12px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(u.email)+'</p>'
       +'</div>'
       +'<div style="text-align:right;flex-shrink:0;">'
-      +'<p style="font-size:15px;font-weight:900;color:var(--pt);">'+pts+'P</p>'
-      +(autoLabel?'<p style="font-size:11px;color:var(--pt);font-weight:600;">자동이관 '+autoLabel+'</p>':'')
+      +(POINTS_ENABLED&&pts?'<p style="font-size:15px;font-weight:900;color:var(--pt);">'+pts+'P</p>':'')
+      +(POINTS_ENABLED&&autoLabel?'<p style="font-size:11px;color:var(--pt);font-weight:600;">자동이관 '+autoLabel+'</p>':'')
       +'</div></div>'
       +'<div style="background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx);line-height:2;margin-bottom:12px;">'
       +'<div>📞 '+esc(u.phone||'-')+'</div>'
@@ -1542,9 +1557,13 @@ async function doResetUserPw(id, name){
 function renderMyAccount(){
   var u=S.user;
   var fullU=S.users.find(function(x){return x.id===u.id;})||u;
-  var pts=(fullU.points||0);
-  var ptEl=document.getElementById('my-point-balance');
-  if(ptEl) ptEl.textContent=pts.toLocaleString()+'P';
+  var ptCard=document.getElementById('my-point-card');
+  if(ptCard) ptCard.style.display=POINTS_ENABLED?'block':'none';
+  if(POINTS_ENABLED){
+    var pts=(fullU.points||0);
+    var ptEl=document.getElementById('my-point-balance');
+    if(ptEl) ptEl.textContent=pts.toLocaleString()+'P';
+  }
   var el=document.getElementById('my-account-info');
   if(el) el.innerHTML=
     '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--tx);">'
